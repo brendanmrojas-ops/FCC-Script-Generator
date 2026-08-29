@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FCC Script Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #F7F6F2; color: #1a1a1a; min-height: 100vh; }
+  header { background: #0D0D0D; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #C9A84C; }
+  .logo { font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; letter-spacing: .04em; }
+  .logo span { color: #C9A84C; }
+  .header-tag { font-size: 11px; font-weight: 500; color: #888; letter-spacing: .12em; text-transform: uppercase; }
+  .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 420px 1fr; gap: 24px; align-items: start; }
+  .card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 28px; }
+  .card-title { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #C9A84C; margin-bottom: 20px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 11px; font-weight: 600; color: #555; margin-bottom: 5px; letter-spacing: .04em; }
+  .field label .req { color: #C9A84C; }
+  input, select, textarea { width: 100%; border: 1px solid #E0DEDC; border-radius: 5px; padding: 9px 12px; font-size: 13px; color: #1a1a1a; background: #FAFAF8; font-family: 'Inter', sans-serif; transition: border-color .15s; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: #C9A84C; background: #fff; }
+  textarea { min-height: 72px; resize: vertical; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .divider { border: none; border-top: 1px solid #F0EFEB; margin: 20px 0; }
+  .btn-generate { width: 100%; background: #C9A84C; color: #0D0D0D; border: none; padding: 13px; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: .03em; transition: background .15s; margin-top: 4px; }
+  .btn-generate:hover { background: #B8963C; }
+  .btn-generate:disabled { opacity: .5; cursor: not-allowed; }
+  .error-msg { font-size: 12px; color: #c0392b; margin-top: 6px; min-height: 16px; }
+  .output-card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 28px; position: sticky; top: 24px; }
+  .output-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #F0EFEB; }
+  .output-title { font-family: 'Playfair Display', serif; font-size: 16px; color: #1a1a1a; }
+  .output-meta { font-size: 11px; color: #888; margin-top: 3px; }
+  .output-meta span { color: #C9A84C; font-weight: 600; }
+  .btn-copy { background: #0D0D0D; color: #fff; border: none; padding: 8px 16px; border-radius: 5px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; transition: background .15s; flex-shrink: 0; }
+  .btn-copy:hover { background: #333; }
+  .script-output { font-size: 14px; line-height: 1.85; color: #1a1a1a; white-space: pre-wrap; min-height: 300px; }
+  .script-output .editor-note { color: #C9A84C; font-style: italic; font-size: 13px; }
+  .script-output .section-label { font-weight: 600; color: #0D0D0D; font-size: 13px; letter-spacing: .06em; }
+  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; color: #aaa; text-align: center; }
+  .empty-state .icon { font-size: 36px; margin-bottom: 12px; opacity: .3; }
+  .empty-state p { font-size: 13px; line-height: 1.6; }
+  .loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; color: #888; gap: 16px; }
+  .dots { display: flex; gap: 6px; }
+  .dots span { width: 8px; height: 8px; border-radius: 50%; background: #C9A84C; animation: pulse .9s infinite; }
+  .dots span:nth-child(2) { animation-delay: .2s; }
+  .dots span:nth-child(3) { animation-delay: .4s; }
+  @keyframes pulse { 0%, 80%, 100% { transform: scale(1); opacity: .6; } 40% { transform: scale(1.3); opacity: 1; } }
+  .new-script-btn { background: transparent; border: 1px solid #E0DEDC; color: #555; padding: 8px 14px; border-radius: 5px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 20px; transition: all .15s; }
+  .new-script-btn:hover { border-color: #C9A84C; color: #C9A84C; }
+  @media (max-width: 800px) { .main { grid-template-columns: 1fr; } header { padding: 14px 20px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">First Class <span>Creators</span></div>
+  <div class="header-tag">Script Generator</div>
+</header>
+
+<div class="main">
+  <div class="card">
+    <div class="card-title">Client info</div>
+    <div class="field">
+      <label>Client name <span class="req">*</span></label>
+      <input type="text" id="clientName" placeholder="e.g. John Smith">
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>Niche <span class="req">*</span></label>
+        <input type="text" id="niche" placeholder="e.g. Fitness coaching">
+      </div>
+      <div class="field">
+        <label>Package tier</label>
+        <select id="packageTier">
+          <option value="12 scripts/month">12 per month</option>
+          <option value="20 scripts/month">20 per month</option>
+          <option value="30 scripts/month">30 per month</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Their offer <span class="req">*</span></label>
+      <input type="text" id="offer" placeholder="e.g. Online running coaching, $500/month">
+    </div>
+    <div class="field">
+      <label>Target audience <span class="req">*</span></label>
+      <input type="text" id="audience" placeholder="e.g. Beginners who want to run their first 5K">
+    </div>
+    <div class="field">
+      <label>Tone of voice</label>
+      <input type="text" id="tone" placeholder="e.g. Energetic, direct, no fluff">
+    </div>
+    <hr class="divider">
+    <div class="card-title">Script settings</div>
+    <div class="row">
+      <div class="field">
+        <label>Video type</label>
+        <select id="videoType">
+          <option>Talking Head</option>
+          <option>Voiceover Broll</option>
+          <option>Sales Talking Head</option>
+          <option>Reaction</option>
+          <option>Split Screen</option>
+          <option>Exercise Demo</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Length</label>
+        <select id="videoLength">
+          <option value="30 seconds (65-75 words)">30 seconds</option>
+          <option value="60 seconds (130-150 words)" selected>60 seconds</option>
+          <option value="80 seconds (175-195 words)">80 seconds</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Script topic / angle <span class="req">*</span></label>
+      <input type="text" id="topic" placeholder="e.g. 3 mistakes beginner runners make">
+    </div>
+    <div class="field">
+      <label>Call to action</label>
+      <select id="cta">
+        <option value="Comment COACH below and I will send you my free training plan">Comment COACH</option>
+        <option value="Comment GUIDE below for a free resource">Comment GUIDE</option>
+        <option value="Follow for more tips like this">Follow for more</option>
+        <option value="Save this video to come back to it">Save this video</option>
+        <option value="DM me and lets talk about working together">DM to work together</option>
+        <option value="Link in bio to get started today">Link in bio</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Additional notes (optional)</label>
+      <textarea id="notes" placeholder="e.g. Avoid injury talk. Client ran Boston Marathon. Keep it punchy."></textarea>
+    </div>
+    <div class="error-msg" id="errMsg"></div>
+    <button class="btn-generate" id="genBtn" onclick="generate()">Generate script</button>
+  </div>
+
+  <div class="output-card" id="outputCard">
+    <div class="empty-state" id="emptyState">
+      <div class="icon">✦</div>
+      <p>Fill in the client info and script settings,<br>then hit Generate script.</p>
+    </div>
+    <div id="outputContent" style="display:none;">
+      <div class="output-header">
+        <div>
+          <div class="output-title" id="outputTitle"></div>
+          <div class="output-meta" id="outputMeta"></div>
+        </div>
+        <button class="btn-copy" onclick="copyScript()">Copy script</button>
+      </div>
+      <div class="script-output" id="scriptOutput"></div>
+      <button class="new-script-btn" onclick="resetForm()">Generate another script</button>
+    </div>
+    <div id="loadingState" style="display:none;" class="loading-state">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div style="font-size:13px;">Writing your script...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let lastScript = '';
+
+  function validate() {
+    const fields = [
+      { id: 'clientName', label: 'Client name' },
+      { id: 'niche', label: 'Niche' },
+      { id: 'offer', label: 'Their offer' },
+      { id: 'audience', label: 'Target audience' },
+      { id: 'topic', label: 'Script topic' },
+    ];
+    for (const f of fields) {
+      if (!document.getElementById(f.id).value.trim()) {
+        document.getElementById('errMsg').textContent = f.label + ' is required.';
+        document.getElementById(f.id).focus();
+        return false;
+      }
+    }
+    document.getElementById('errMsg').textContent = '';
+    return true;
+  }
+
+  async function generate() {
+    if (!validate()) return;
+    const btn = document.getElementById('genBtn');
+    btn.disabled = true;
+    btn.textContent = 'Generating...';
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('outputContent').style.display = 'none';
+    document.getElementById('loadingState').style.display = 'flex';
+
+    const formData = {
+      clientName:  document.getElementById('clientName').value.trim(),
+      niche:       document.getElementById('niche').value.trim(),
+      offer:       document.getElementById('offer').value.trim(),
+      audience:    document.getElementById('audience').value.trim(),
+      tone:        document.getElementById('tone').value.trim(),
+      packageTier: document.getElementById('packageTier').value,
+      videoType:   document.getElementById('videoType').value,
+      videoLength: document.getElementById('videoLength').value,
+      topic:       document.getElementById('topic').value.trim(),
+      cta:         document.getElementById('cta').value,
+      notes:       document.getElementById('notes').value.trim(),
+    };
+
+    try {
+      const res = await fetch('/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      lastScript = data.script;
+      document.getElementById('outputTitle').textContent = formData.clientName + ' — ' + formData.videoType;
+      document.getElementById('outputMeta').innerHTML = '<span>' + formData.videoLength.split(' (')[0] + '</span> &nbsp;·&nbsp; ' + formData.packageTier + ' &nbsp;·&nbsp; ' + formData.topic;
+      const formatted = data.script
+        .replace(/\[EDITOR NOTE: (.*?)\]/g, '<span class="editor-note">[EDITOR NOTE: $1]</span>')
+        .replace(/^(HOOK:|BODY:|CTA:)/gm, '<span class="section-label">$1</span>');
+      document.getElementById('scriptOutput').innerHTML = formatted;
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('outputContent').style.display = 'block';
+    } catch (err) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('emptyState').style.display = 'flex';
+      document.getElementById('errMsg').textContent = 'Error: ' + err.message;
+    }
+    btn.disabled = false;
+    btn.textContent = 'Generate script';
+  }
+
+  function copyScript() {
+    if (!lastScript) return;
+    navigator.clipboard.writeText(lastScript).then(() => {
+      const btn = document.querySelector('.btn-copy');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy script'; }, 2000);
+    });
+  }
+
+  function resetForm() {
+    document.getElementById('topic').value = '';
+    document.getElementById('notes').value = '';
+    document.getElementById('outputContent').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'flex';
+    document.getElementById('topic').focus();
+  }
+</script>
+</body>
+</html>
