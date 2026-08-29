@@ -12,6 +12,22 @@
   .logo { font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; letter-spacing: .04em; }
   .logo span { color: #C9A84C; }
   .header-tag { font-size: 11px; font-weight: 500; color: #888; letter-spacing: .12em; text-transform: uppercase; }
+
+  /* PASSWORD SCREEN */
+  .password-screen { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 58px); }
+  .password-card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 40px; width: 100%; max-width: 400px; text-align: center; }
+  .password-card .lock-icon { font-size: 32px; margin-bottom: 16px; }
+  .password-card h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: #1a1a1a; margin-bottom: 8px; }
+  .password-card p { font-size: 13px; color: #888; margin-bottom: 24px; }
+  .password-card input { width: 100%; border: 1px solid #E0DEDC; border-radius: 5px; padding: 11px 14px; font-size: 14px; color: #1a1a1a; background: #FAFAF8; font-family: 'Inter', sans-serif; margin-bottom: 12px; text-align: center; letter-spacing: .08em; }
+  .password-card input:focus { outline: none; border-color: #C9A84C; background: #fff; }
+  .btn-unlock { width: 100%; background: #C9A84C; color: #0D0D0D; border: none; padding: 12px; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+  .btn-unlock:hover { background: #B8963C; }
+  .btn-unlock:disabled { opacity: .5; cursor: not-allowed; }
+  .pw-error { font-size: 12px; color: #c0392b; margin-top: 8px; min-height: 16px; }
+
+  /* MAIN APP */
+  .app-screen { display: none; }
   .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 420px 1fr; gap: 24px; align-items: start; }
   .card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 28px; }
   .card-title { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #C9A84C; margin-bottom: 20px; }
@@ -23,7 +39,7 @@
   textarea { min-height: 72px; resize: vertical; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .divider { border: none; border-top: 1px solid #F0EFEB; margin: 20px 0; }
-  .btn-generate { width: 100%; background: #C9A84C; color: #0D0D0D; border: none; padding: 13px; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: .03em; transition: background .15s; margin-top: 4px; }
+  .btn-generate { width: 100%; background: #C9A84C; color: #0D0D0D; border: none; padding: 13px; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background .15s; margin-top: 4px; }
   .btn-generate:hover { background: #B8963C; }
   .btn-generate:disabled { opacity: .5; cursor: not-allowed; }
   .error-msg { font-size: 12px; color: #c0392b; margin-top: 6px; min-height: 16px; }
@@ -58,110 +74,156 @@
   <div class="header-tag">Script Generator</div>
 </header>
 
-<div class="main">
-  <div class="card">
-    <div class="card-title">Client info</div>
-    <div class="field">
-      <label>Client name <span class="req">*</span></label>
-      <input type="text" id="clientName" placeholder="e.g. John Smith">
-    </div>
-    <div class="row">
-      <div class="field">
-        <label>Niche <span class="req">*</span></label>
-        <input type="text" id="niche" placeholder="e.g. Fitness coaching">
-      </div>
-      <div class="field">
-        <label>Package tier</label>
-        <select id="packageTier">
-          <option value="12 scripts/month">12 per month</option>
-          <option value="20 scripts/month">20 per month</option>
-          <option value="30 scripts/month">30 per month</option>
-        </select>
-      </div>
-    </div>
-    <div class="field">
-      <label>Their offer <span class="req">*</span></label>
-      <input type="text" id="offer" placeholder="e.g. Online running coaching, $500/month">
-    </div>
-    <div class="field">
-      <label>Target audience <span class="req">*</span></label>
-      <input type="text" id="audience" placeholder="e.g. Beginners who want to run their first 5K">
-    </div>
-    <div class="field">
-      <label>Tone of voice</label>
-      <input type="text" id="tone" placeholder="e.g. Energetic, direct, no fluff">
-    </div>
-    <hr class="divider">
-    <div class="card-title">Script settings</div>
-    <div class="row">
-      <div class="field">
-        <label>Video type</label>
-        <select id="videoType">
-          <option>Talking Head</option>
-          <option>Voiceover Broll</option>
-          <option>Sales Talking Head</option>
-          <option>Reaction</option>
-          <option>Split Screen</option>
-          <option>Exercise Demo</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Length</label>
-        <select id="videoLength">
-          <option value="30 seconds (65-75 words)">30 seconds</option>
-          <option value="60 seconds (130-150 words)" selected>60 seconds</option>
-          <option value="80 seconds (175-195 words)">80 seconds</option>
-        </select>
-      </div>
-    </div>
-    <div class="field">
-      <label>Script topic / angle <span class="req">*</span></label>
-      <input type="text" id="topic" placeholder="e.g. 3 mistakes beginner runners make">
-    </div>
-    <div class="field">
-      <label>Call to action</label>
-      <select id="cta">
-        <option value="Comment COACH below and I will send you my free training plan">Comment COACH</option>
-        <option value="Comment GUIDE below for a free resource">Comment GUIDE</option>
-        <option value="Follow for more tips like this">Follow for more</option>
-        <option value="Save this video to come back to it">Save this video</option>
-        <option value="DM me and lets talk about working together">DM to work together</option>
-        <option value="Link in bio to get started today">Link in bio</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>Additional notes (optional)</label>
-      <textarea id="notes" placeholder="e.g. Avoid injury talk. Client ran Boston Marathon. Keep it punchy."></textarea>
-    </div>
-    <div class="error-msg" id="errMsg"></div>
-    <button class="btn-generate" id="genBtn" onclick="generate()">Generate script</button>
+<!-- PASSWORD SCREEN -->
+<div class="password-screen" id="passwordScreen">
+  <div class="password-card">
+    <div class="lock-icon">🔐</div>
+    <h2>Team Access Only</h2>
+    <p>Enter your access password to continue.</p>
+    <input type="password" id="pwInput" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlock()">
+    <button class="btn-unlock" id="unlockBtn" onclick="unlock()">Unlock</button>
+    <div class="pw-error" id="pwError"></div>
   </div>
+</div>
 
-  <div class="output-card" id="outputCard">
-    <div class="empty-state" id="emptyState">
-      <div class="icon">✦</div>
-      <p>Fill in the client info and script settings,<br>then hit Generate script.</p>
-    </div>
-    <div id="outputContent" style="display:none;">
-      <div class="output-header">
-        <div>
-          <div class="output-title" id="outputTitle"></div>
-          <div class="output-meta" id="outputMeta"></div>
-        </div>
-        <button class="btn-copy" onclick="copyScript()">Copy script</button>
+<!-- MAIN APP -->
+<div class="app-screen" id="appScreen">
+  <div class="main">
+    <div class="card">
+      <div class="card-title">Client info</div>
+      <div class="field">
+        <label>Client name <span class="req">*</span></label>
+        <input type="text" id="clientName" placeholder="e.g. John Smith">
       </div>
-      <div class="script-output" id="scriptOutput"></div>
-      <button class="new-script-btn" onclick="resetForm()">Generate another script</button>
+      <div class="row">
+        <div class="field">
+          <label>Niche <span class="req">*</span></label>
+          <input type="text" id="niche" placeholder="e.g. Fitness coaching">
+        </div>
+        <div class="field">
+          <label>Package tier</label>
+          <select id="packageTier">
+            <option value="12 scripts/month">12 per month</option>
+            <option value="20 scripts/month">20 per month</option>
+            <option value="30 scripts/month">30 per month</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Their offer <span class="req">*</span></label>
+        <input type="text" id="offer" placeholder="e.g. Online running coaching, $500/month">
+      </div>
+      <div class="field">
+        <label>Target audience <span class="req">*</span></label>
+        <input type="text" id="audience" placeholder="e.g. Beginners who want to run their first 5K">
+      </div>
+      <div class="field">
+        <label>Tone of voice</label>
+        <input type="text" id="tone" placeholder="e.g. Energetic, direct, no fluff">
+      </div>
+      <hr class="divider">
+      <div class="card-title">Script settings</div>
+      <div class="row">
+        <div class="field">
+          <label>Video type</label>
+          <select id="videoType">
+            <option>Talking Head</option>
+            <option>Voiceover Broll</option>
+            <option>Sales Talking Head</option>
+            <option>Reaction</option>
+            <option>Split Screen</option>
+            <option>Exercise Demo</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Length</label>
+          <select id="videoLength">
+            <option value="30 seconds (65-75 words)">30 seconds</option>
+            <option value="60 seconds (130-150 words)" selected>60 seconds</option>
+            <option value="80 seconds (175-195 words)">80 seconds</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Script topic / angle <span class="req">*</span></label>
+        <input type="text" id="topic" placeholder="e.g. 3 mistakes beginner runners make">
+      </div>
+      <div class="field">
+        <label>Call to action</label>
+        <select id="cta">
+          <option value="Comment COACH below and I will send you my free training plan">Comment COACH</option>
+          <option value="Comment GUIDE below for a free resource">Comment GUIDE</option>
+          <option value="Follow for more tips like this">Follow for more</option>
+          <option value="Save this video to come back to it">Save this video</option>
+          <option value="DM me and lets talk about working together">DM to work together</option>
+          <option value="Link in bio to get started today">Link in bio</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Additional notes (optional)</label>
+        <textarea id="notes" placeholder="e.g. Avoid injury talk. Client ran Boston Marathon. Keep it punchy."></textarea>
+      </div>
+      <div class="error-msg" id="errMsg"></div>
+      <button class="btn-generate" id="genBtn" onclick="generate()">Generate script</button>
     </div>
-    <div id="loadingState" style="display:none;" class="loading-state">
-      <div class="dots"><span></span><span></span><span></span></div>
-      <div style="font-size:13px;">Writing your script...</div>
+
+    <div class="output-card" id="outputCard">
+      <div class="empty-state" id="emptyState">
+        <div class="icon">✦</div>
+        <p>Fill in the client info and script settings,<br>then hit Generate script.</p>
+      </div>
+      <div id="outputContent" style="display:none;">
+        <div class="output-header">
+          <div>
+            <div class="output-title" id="outputTitle"></div>
+            <div class="output-meta" id="outputMeta"></div>
+          </div>
+          <button class="btn-copy" onclick="copyScript()">Copy script</button>
+        </div>
+        <div class="script-output" id="scriptOutput"></div>
+        <button class="new-script-btn" onclick="resetForm()">Generate another script</button>
+      </div>
+      <div id="loadingState" style="display:none;" class="loading-state">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <div style="font-size:13px;">Writing your script...</div>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
   let lastScript = '';
+  let sessionPassword = '';
+
+  async function unlock() {
+    const pw = document.getElementById('pwInput').value.trim();
+    if (!pw) { document.getElementById('pwError').textContent = 'Please enter a password.'; return; }
+    const btn = document.getElementById('unlockBtn');
+    btn.disabled = true;
+    btn.textContent = 'Checking...';
+    try {
+      const res = await fetch('/verify-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pw })
+      });
+      const data = await res.json();
+      if (data.success) {
+        sessionPassword = pw;
+        document.getElementById('passwordScreen').style.display = 'none';
+        document.getElementById('appScreen').style.display = 'block';
+      } else {
+        document.getElementById('pwError').textContent = 'Incorrect password. Try again.';
+        document.getElementById('pwInput').value = '';
+        btn.disabled = false;
+        btn.textContent = 'Unlock';
+      }
+    } catch (err) {
+      document.getElementById('pwError').textContent = 'Something went wrong. Try again.';
+      btn.disabled = false;
+      btn.textContent = 'Unlock';
+    }
+  }
 
   function validate() {
     const fields = [
@@ -192,17 +254,18 @@
     document.getElementById('loadingState').style.display = 'flex';
 
     const formData = {
-      clientName:  document.getElementById('clientName').value.trim(),
-      niche:       document.getElementById('niche').value.trim(),
-      offer:       document.getElementById('offer').value.trim(),
-      audience:    document.getElementById('audience').value.trim(),
-      tone:        document.getElementById('tone').value.trim(),
+      password: sessionPassword,
+      clientName: document.getElementById('clientName').value.trim(),
+      niche: document.getElementById('niche').value.trim(),
+      offer: document.getElementById('offer').value.trim(),
+      audience: document.getElementById('audience').value.trim(),
+      tone: document.getElementById('tone').value.trim(),
       packageTier: document.getElementById('packageTier').value,
-      videoType:   document.getElementById('videoType').value,
+      videoType: document.getElementById('videoType').value,
       videoLength: document.getElementById('videoLength').value,
-      topic:       document.getElementById('topic').value.trim(),
-      cta:         document.getElementById('cta').value,
-      notes:       document.getElementById('notes').value.trim(),
+      topic: document.getElementById('topic').value.trim(),
+      cta: document.getElementById('cta').value,
+      notes: document.getElementById('notes').value.trim(),
     };
 
     try {
