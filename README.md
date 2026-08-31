@@ -38,18 +38,31 @@ This project sits at the intersection of backend development, cloud deployment, 
 ## 📸 Screenshot Gallery
 
 **Password screen — Team access only**
+
 <img src="password-screen.png" width="500"/>
 
+---
+
 **Full application UI — two column layout**
+
 <img src="app-ui.png" width="500"/>
 
+---
+
 **Generated script output — HOOK, BODY, CTA with editor notes**
+
 <img src="script-output.png" width="500"/>
 
+---
+
 **Render dashboard — Live deployment status**
+
 <img src="render-dashboard.png" width="500"/>
 
+---
+
 **Environment variables — API key and password secured**
+
 <img src="env-variables.png" width="500"/>
 
 ---
