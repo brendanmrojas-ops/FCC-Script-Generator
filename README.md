@@ -37,17 +37,20 @@ This project sits at the intersection of backend development, cloud deployment, 
 
 ## 📸 Screenshot Gallery
 
-📌 **Screenshot Placeholder: Password screen showing the Team Access Only prompt**
+**Password screen — Team access only**
+<img src="password-screen.png" width="500"/>
 
-📌 **Screenshot Placeholder: Full application UI showing the two-column layout with the form on the left and script output on the right**
+**Full application UI — two column layout**
+<img src="app-ui.png" width="500"/>
 
-📌 **Screenshot Placeholder: Generated script output showing HOOK, BODY, and CTA sections with editor notes highlighted in gold**
+**Generated script output — HOOK, BODY, CTA with editor notes**
+<img src="script-output.png" width="500"/>
 
-📌 **Screenshot Placeholder: Render dashboard showing successful deployment and live status**
+**Render dashboard — Live deployment status**
+<img src="render-dashboard.png" width="500"/>
 
-📌 **Screenshot Placeholder: Render environment variables dashboard showing ANTHROPIC_API_KEY and APP_PASSWORD configured (values hidden)**
-
-📌 **Screenshot Placeholder: GitHub repository showing file structure and commit history**
+**Environment variables — API key and password secured**
+<img src="env-variables.png" width="500"/>
 
 ---
 
@@ -134,8 +137,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.listen(3000, () => console.log('Server running on port 3000'));
 ```
 
-📌 **Screenshot Placeholder: Terminal showing the server running successfully on port 3000**
-
 ---
 
 ### Step 2 — Secure API Key Management and Password Authentication
@@ -188,8 +189,6 @@ Update `APP_PASSWORD` in Render's environment dashboard. Render redeploys automa
 **Real-world connection:**
 This is exactly how credentials are managed in professional DevOps workflows — locally via `.env` files or shell exports, and in production via platform-level secret management such as AWS Secrets Manager, Azure Key Vault, Render environment variables, or Kubernetes secrets.
 
-📌 **Screenshot Placeholder: Render environment variables dashboard showing both variables configured with values hidden**
-
 ---
 
 ### Step 3 — Building the API Route and Anthropic Integration
@@ -236,8 +235,6 @@ TOPIC: ${formData.topic}`;
 **Why this matters:**
 Working with REST APIs and handling HTTP requests and responses is a core skill in backend development and DevOps. Understanding request structure, headers, authentication, and response parsing is directly applicable to roles that involve building or maintaining API-driven services.
 
-📌 **Screenshot Placeholder: Browser network tab showing the POST request to /generate and the JSON response containing the script**
-
 ---
 
 ### Step 4 — Building the Frontend UI
@@ -252,10 +249,6 @@ Built a responsive two-column web interface in HTML, CSS, and JavaScript. The ap
 - Dynamic script rendering with highlighted section labels and editor notes
 - One-click copy to clipboard functionality
 - Responsive layout that collapses to single column on mobile
-
-📌 **Screenshot Placeholder: Password screen showing the Team Access Only prompt**
-
-📌 **Screenshot Placeholder: The full UI with a completed form on the left and a generated script on the right**
 
 ---
 
@@ -285,8 +278,6 @@ I used this workflow for every update throughout the project — adding password
 
 **Why this matters:**
 This is the same fundamental principle behind enterprise CI/CD tools like GitHub Actions, Jenkins, and GitLab CI. Understanding that a code commit triggers an automated build and deploy pipeline is one of the core concepts in DevOps engineering.
-
-📌 **Screenshot Placeholder: Render deploy log showing a successful deployment triggered by a GitHub commit**
 
 ---
 
