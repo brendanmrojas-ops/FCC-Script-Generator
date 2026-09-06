@@ -1,16 +1,27 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+const APP_PASSWORD = process.env.APP_PASSWORD;
+
+app.post('/verify-password', (req, res) => {
+  const { password } = req.body;
+  if (password === APP_PASSWORD) {
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ success: false, error: 'Incorrect password.' });
+  }
+});
 
 app.post('/generate', async (req, res) => {
-  const f = req.body;
+  const { password, ...f } = req.body;
+  if (password !== APP_PASSWORD) {
+    return res.status(401).json({ error: 'Unauthorized.' });
+  }
 
   const systemPrompt = `You are an expert short-form video scriptwriter for First Class Creators, a premium content agency. You write scripts for coaches, course creators, and digital service providers who film themselves on their phones for Instagram Reels.
 
