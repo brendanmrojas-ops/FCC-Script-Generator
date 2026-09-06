@@ -12,23 +12,7 @@
   .logo { font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; letter-spacing: .04em; }
   .logo span { color: #C9A84C; }
   .header-tag { font-size: 11px; font-weight: 500; color: #888; letter-spacing: .12em; text-transform: uppercase; }
-
-  /* PASSWORD SCREEN */
-  .password-screen { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 58px); }
-  .password-card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 40px; width: 100%; max-width: 400px; text-align: center; }
-  .password-card .lock-icon { font-size: 32px; margin-bottom: 16px; }
-  .password-card h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: #1a1a1a; margin-bottom: 8px; }
-  .password-card p { font-size: 13px; color: #888; margin-bottom: 24px; }
-  .password-card input { width: 100%; border: 1px solid #E0DEDC; border-radius: 5px; padding: 11px 14px; font-size: 14px; color: #1a1a1a; background: #FAFAF8; font-family: 'Inter', sans-serif; margin-bottom: 12px; text-align: center; letter-spacing: .08em; }
-  .password-card input:focus { outline: none; border-color: #C9A84C; background: #fff; }
-  .btn-unlock { width: 100%; background: #C9A84C; color: #0D0D0D; border: none; padding: 12px; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
-  .btn-unlock:hover { background: #B8963C; }
-  .btn-unlock:disabled { opacity: .5; cursor: not-allowed; }
-  .pw-error { font-size: 12px; color: #c0392b; margin-top: 8px; min-height: 16px; }
-
-  /* MAIN APP */
-  .app-screen { display: none; }
-  .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 420px 1fr; gap: 24px; align-items: start; }
+  .main { max-width: 1140px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 460px 1fr; gap: 24px; align-items: start; }
   .card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 28px; }
   .card-title { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #C9A84C; margin-bottom: 20px; }
   .field { margin-bottom: 16px; }
@@ -39,18 +23,22 @@
   textarea { min-height: 72px; resize: vertical; }
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .divider { border: none; border-top: 1px solid #F0EFEB; margin: 20px 0; }
-  .btn-generate { width: 100%; background: #C9A84C; color: #0D0D0D; border: none; padding: 13px; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background .15s; margin-top: 4px; }
-  .btn-generate:hover { background: #B8963C; }
+  .vault-section { background: #FAFAF8; border: 1px solid #E8E6E2; border-radius: 6px; padding: 16px; margin-bottom: 16px; }
+  .vault-section-title { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #C9A84C; margin-bottom: 12px; }
+  .error-msg { color: #c44; font-size: 12px; margin-bottom: 10px; min-height: 16px; }
+  .btn-generate { width: 100%; background: #0D0D0D; color: #fff; border: none; border-radius: 5px; padding: 13px; font-size: 14px; font-weight: 600; letter-spacing: .04em; cursor: pointer; font-family: 'Inter', sans-serif; transition: background .15s; }
+  .btn-generate:hover { background: #222; }
   .btn-generate:disabled { opacity: .5; cursor: not-allowed; }
-  .error-msg { font-size: 12px; color: #c0392b; margin-top: 6px; min-height: 16px; }
-  .output-card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 28px; position: sticky; top: 24px; }
-  .output-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #F0EFEB; }
-  .output-title { font-family: 'Playfair Display', serif; font-size: 16px; color: #1a1a1a; }
-  .output-meta { font-size: 11px; color: #888; margin-top: 3px; }
-  .output-meta span { color: #C9A84C; font-weight: 600; }
-  .btn-copy { background: #0D0D0D; color: #fff; border: none; padding: 8px 16px; border-radius: 5px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; transition: background .15s; flex-shrink: 0; }
-  .btn-copy:hover { background: #333; }
-  .script-output { font-size: 14px; line-height: 1.85; color: #1a1a1a; white-space: pre-wrap; min-height: 300px; }
+  .output-card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 28px; min-height: 400px; position: sticky; top: 24px; }
+  .output-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+  .output-title { font-size: 15px; font-weight: 600; color: #0D0D0D; }
+  .output-meta { font-size: 11px; color: #999; margin-top: 4px; }
+  .output-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .tag { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 3px; background: #F0EFEB; color: #666; }
+  .tag.gold { background: #FBF5E6; color: #C9A84C; }
+  .btn-copy { background: #C9A84C; color: #fff; border: none; border-radius: 5px; padding: 8px 16px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; transition: background .15s; }
+  .btn-copy:hover { background: #b8933d; }
+  .script-output { font-size: 14px; line-height: 1.8; color: #1a1a1a; white-space: pre-wrap; }
   .script-output .editor-note { color: #C9A84C; font-style: italic; font-size: 13px; }
   .script-output .section-label { font-weight: 600; color: #0D0D0D; font-size: 13px; letter-spacing: .06em; }
   .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; color: #aaa; text-align: center; }
@@ -64,89 +52,81 @@
   @keyframes pulse { 0%, 80%, 100% { transform: scale(1); opacity: .6; } 40% { transform: scale(1.3); opacity: 1; } }
   .new-script-btn { background: transparent; border: 1px solid #E0DEDC; color: #555; padding: 8px 14px; border-radius: 5px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 20px; transition: all .15s; }
   .new-script-btn:hover { border-color: #C9A84C; color: #C9A84C; }
-  @media (max-width: 800px) { .main { grid-template-columns: 1fr; } header { padding: 14px 20px; } }
+  .password-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #F7F6F2; }
+  .password-card { background: #fff; border-radius: 12px; border: 0.5px solid #E0DEDC; padding: 48px 40px; width: 100%; max-width: 400px; text-align: center; }
+  .password-card .lock { font-size: 40px; margin-bottom: 16px; }
+  .password-card h1 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 8px; }
+  .password-card p { font-size: 13px; color: #888; margin-bottom: 24px; }
+  .password-card input { margin-bottom: 12px; }
+  .password-error { color: #c44; font-size: 12px; margin-top: 8px; min-height: 16px; }
+  @media (max-width: 860px) { .main { grid-template-columns: 1fr; } header { padding: 14px 20px; } }
 </style>
 </head>
 <body>
 
+<div id="passwordScreen" class="password-screen">
+  <div class="password-card">
+    <div class="lock">🔐</div>
+    <h1>Team Access Only</h1>
+    <p>Enter your access password to continue.</p>
+    <input type="password" id="passwordInput" placeholder="Password" onkeydown="if(event.key==='Enter')unlock()">
+    <button class="btn-generate" onclick="unlock()">Unlock</button>
+    <div class="password-error" id="passwordError"></div>
+  </div>
+</div>
+
+<div id="appScreen" style="display:none;">
 <header>
   <div class="logo">First Class <span>Creators</span></div>
   <div class="header-tag">Script Generator</div>
 </header>
-
-<!-- PASSWORD SCREEN -->
-<div class="password-screen" id="passwordScreen">
-  <div class="password-card">
-    <div class="lock-icon">🔐</div>
-    <h2>Team Access Only</h2>
-    <p>Enter your access password to continue.</p>
-    <input type="password" id="pwInput" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlock()">
-    <button class="btn-unlock" id="unlockBtn" onclick="unlock()">Unlock</button>
-    <div class="pw-error" id="pwError"></div>
-  </div>
-</div>
-
-<!-- MAIN APP -->
-<div class="app-screen" id="appScreen">
-  <div class="main">
-    <div class="card">
-      <div class="card-title">Client info</div>
+<div class="main">
+  <div class="card">
+    <div class="card-title">Client info</div>
+    <div class="field">
+      <label>Client name <span class="req">*</span></label>
+      <input type="text" id="clientName" placeholder="e.g. John Smith">
+    </div>
+    <div class="row">
       <div class="field">
-        <label>Client name <span class="req">*</span></label>
-        <input type="text" id="clientName" placeholder="e.g. John Smith">
-      </div>
-      <div class="row">
-        <div class="field">
-          <label>Niche <span class="req">*</span></label>
-          <input type="text" id="niche" placeholder="e.g. Fitness coaching">
-        </div>
-        <div class="field">
-          <label>Package tier</label>
-          <select id="packageTier">
-            <option value="12 scripts/month">12 per month</option>
-            <option value="20 scripts/month">20 per month</option>
-            <option value="30 scripts/month">30 per month</option>
-          </select>
-        </div>
+        <label>Niche <span class="req">*</span></label>
+        <input type="text" id="niche" placeholder="e.g. Fitness coaching">
       </div>
       <div class="field">
-        <label>Their offer <span class="req">*</span></label>
-        <input type="text" id="offer" placeholder="e.g. Online running coaching, $500/month">
+        <label>Package tier</label>
+        <select id="packageTier">
+          <option value="12 scripts/month">12 per month</option>
+          <option value="20 scripts/month">20 per month</option>
+          <option value="30 scripts/month">30 per month</option>
+        </select>
       </div>
+    </div>
+    <div class="field">
+      <label>Their offer <span class="req">*</span></label>
+      <input type="text" id="offer" placeholder="e.g. Online running coaching, $500/month">
+    </div>
+    <div class="field">
+      <label>Target audience <span class="req">*</span></label>
+      <input type="text" id="audience" placeholder="e.g. Beginners who want to run their first 5K">
+    </div>
+    <div class="field">
+      <label>Tone of voice</label>
+      <input type="text" id="tone" placeholder="e.g. Energetic, direct, no fluff">
+    </div>
+    <hr class="divider">
+    <div class="card-title">Script settings</div>
+    <div class="field">
+      <label>Script topic / angle <span class="req">*</span></label>
+      <input type="text" id="topic" placeholder="e.g. 3 mistakes beginner runners make">
+    </div>
+    <div class="row">
       <div class="field">
-        <label>Target audience <span class="req">*</span></label>
-        <input type="text" id="audience" placeholder="e.g. Beginners who want to run their first 5K">
-      </div>
-      <div class="field">
-        <label>Tone of voice</label>
-        <input type="text" id="tone" placeholder="e.g. Energetic, direct, no fluff">
-      </div>
-      <hr class="divider">
-      <div class="card-title">Script settings</div>
-      <div class="row">
-        <div class="field">
-          <label>Video type</label>
-          <select id="videoType">
-            <option>Talking Head</option>
-            <option>Voiceover Broll</option>
-            <option>Sales Talking Head</option>
-            <option>Reaction</option>
-            <option>Split Screen</option>
-            <option>Exercise Demo</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Length</label>
-          <select id="videoLength">
-            <option value="30 seconds (65-75 words)">30 seconds</option>
-            <option value="60 seconds (130-150 words)" selected>60 seconds</option>
-            <option value="80 seconds (175-195 words)">80 seconds</option>
-          </select>
-        </div>
-      </div>
-      <div class="field">
-        <label>Script topic / angle <span class="req">*</span></label>
-        <input type="text" id="topic" placeholder="e.g. 3 mistakes beginner runners make">
+        <label>Video length</label>
+        <select id="videoLength">
+          <option value="30 seconds (65-75 words)">30 seconds</option>
+          <option value="60 seconds (130-150 words)" selected>60 seconds</option>
+          <option value="80 seconds (175-195 words)">80 seconds</option>
+        </select>
       </div>
       <div class="field">
         <label>Call to action</label>
@@ -159,36 +139,90 @@
           <option value="Link in bio to get started today">Link in bio</option>
         </select>
       </div>
-      <div class="field">
-        <label>Additional notes (optional)</label>
-        <textarea id="notes" placeholder="e.g. Avoid injury talk. Client ran Boston Marathon. Keep it punchy."></textarea>
-      </div>
-      <div class="error-msg" id="errMsg"></div>
-      <button class="btn-generate" id="genBtn" onclick="generate()">Generate script</button>
     </div>
-
-    <div class="output-card" id="outputCard">
-      <div class="empty-state" id="emptyState">
-        <div class="icon">✦</div>
-        <p>Fill in the client info and script settings,<br>then hit Generate script.</p>
+    <hr class="divider">
+    <div class="vault-section">
+      <div class="vault-section-title">Vault selectors</div>
+      <div class="field">
+        <label>Hook category</label>
+        <select id="hookCategory">
+          <option value="Any — choose the strongest hook for this topic">Any (AI chooses best)</option>
+          <option value="Education — teach something valuable, tips, hacks, how-to">Education</option>
+          <option value="Myth Busting — challenge a common belief, pattern interrupt">Myth Busting</option>
+          <option value="Step-by-Step — framework or system hook">Step-by-Step / System</option>
+          <option value="Common Mistakes — warning or mistake hook">Common Mistakes</option>
+          <option value="Authority — results, credibility, proof, transformation">Authority / Results</option>
+          <option value="Storytelling — personal journey, origin story, narrative">Storytelling</option>
+          <option value="Comparison — side by side, before and after">Comparison</option>
+          <option value="Day in the Life — routine, behind the scenes">Day in the Life</option>
+          <option value="Viral Pattern — high-converting universal hook formula">Viral Pattern</option>
+        </select>
       </div>
-      <div id="outputContent" style="display:none;">
-        <div class="output-header">
-          <div>
-            <div class="output-title" id="outputTitle"></div>
-            <div class="output-meta" id="outputMeta"></div>
-          </div>
-          <button class="btn-copy" onclick="copyScript()">Copy script</button>
+      <div class="field">
+        <label>Script template</label>
+        <select id="template">
+          <option value="Best template for this topic and hook">Any (AI chooses best)</option>
+          <option value="Educational Tip — Hook, Tip, Proof, CTA">Educational Tip</option>
+          <option value="Step-by-Step — Hook, Step 1, Step 2, Step 3, CTA">Step-by-Step</option>
+          <option value="Common Mistake — Hook, Mistake, Why Its Wrong, Fix, CTA">Common Mistake</option>
+          <option value="Myth Busting — Hook, Myth, Truth, Proof, CTA">Myth Busting</option>
+          <option value="Before and After Bridge — Hook, Before State, Bridge, After State, CTA">Before and After Bridge</option>
+          <option value="Authority — Hook, Credibility, Value, Offer, CTA">Authority / Credibility</option>
+          <option value="Controversial Opinion — Hook, Bold Claim, Reasoning, CTA">Controversial Opinion</option>
+          <option value="Heros Journey — Hook, Struggle, Turning Point, Result, CTA">Heros Journey</option>
+          <option value="Man in a Hole — Hook, Problem, Deeper Problem, Solution, CTA">Man in a Hole</option>
+          <option value="The Expose — Hook, What They Dont Tell You, Truth, CTA">The Expose</option>
+          <option value="Comparison — Hook, Option A, Option B, Winner, CTA">Comparison</option>
+          <option value="Client Transformation — Hook, Before, What We Did, After, CTA">Client Transformation</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Video format</label>
+        <select id="videoFormat">
+          <option value="Talking Head — client speaks directly to camera, no B-roll">Talking Head</option>
+          <option value="Voice-Over with B-Roll — voice over matching footage, no face shown">Voice-Over with B-Roll</option>
+          <option value="Text-Hook Loop — short looping clip with large text block on screen, trending audio">Text-Hook Loop</option>
+          <option value="Mixed Format — talking head cuts to B-roll then back to client">Mixed Format</option>
+          <option value="Green Screen — client talks while screenshots or visuals play behind them">Green Screen</option>
+          <option value="Skit or Roleplay — client plays two characters, split screen">Skit / Roleplay</option>
+          <option value="POV — camera acts as viewers perspective, text sets the scene">POV</option>
+          <option value="Day in the Life Vlog — fast-edited montage with voice-over lesson">Day in the Life Vlog</option>
+          <option value="Live Case Study or Teardown — client analyzes a real example on screen">Case Study / Teardown</option>
+          <option value="Watch Me Work Silent ASMR — satisfying footage of task being completed, minimal speech">Watch Me Work / ASMR</option>
+          <option value="Direct Response Interview — off-camera question, client answers immediately raw and unfiltered">Interview Q&amp;A</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Additional notes (optional)</label>
+      <textarea id="notes" placeholder="e.g. Avoid injury talk. Client ran Boston Marathon. Keep it punchy."></textarea>
+    </div>
+    <div class="error-msg" id="errMsg"></div>
+    <button class="btn-generate" id="genBtn" onclick="generate()">Generate script</button>
+  </div>
+  <div class="output-card" id="outputCard">
+    <div class="empty-state" id="emptyState">
+      <div class="icon">✦</div>
+      <p>Fill in the client info and script settings,<br>then hit Generate script.</p>
+    </div>
+    <div id="outputContent" style="display:none;">
+      <div class="output-header">
+        <div>
+          <div class="output-title" id="outputTitle"></div>
+          <div class="output-meta" id="outputMeta"></div>
+          <div class="output-tags" id="outputTags"></div>
         </div>
-        <div class="script-output" id="scriptOutput"></div>
-        <button class="new-script-btn" onclick="resetForm()">Generate another script</button>
+        <button class="btn-copy" onclick="copyScript()">Copy script</button>
       </div>
-      <div id="loadingState" style="display:none;" class="loading-state">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <div style="font-size:13px;">Writing your script...</div>
-      </div>
+      <div class="script-output" id="scriptOutput"></div>
+      <button class="new-script-btn" onclick="resetForm()">Generate another script</button>
+    </div>
+    <div id="loadingState" style="display:none;" class="loading-state">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div style="font-size:13px;">Writing your script...</div>
     </div>
   </div>
+</div>
 </div>
 
 <script>
@@ -196,32 +230,19 @@
   let sessionPassword = '';
 
   async function unlock() {
-    const pw = document.getElementById('pwInput').value.trim();
-    if (!pw) { document.getElementById('pwError').textContent = 'Please enter a password.'; return; }
-    const btn = document.getElementById('unlockBtn');
-    btn.disabled = true;
-    btn.textContent = 'Checking...';
-    try {
-      const res = await fetch('/verify-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pw })
-      });
-      const data = await res.json();
-      if (data.success) {
-        sessionPassword = pw;
-        document.getElementById('passwordScreen').style.display = 'none';
-        document.getElementById('appScreen').style.display = 'block';
-      } else {
-        document.getElementById('pwError').textContent = 'Incorrect password. Try again.';
-        document.getElementById('pwInput').value = '';
-        btn.disabled = false;
-        btn.textContent = 'Unlock';
-      }
-    } catch (err) {
-      document.getElementById('pwError').textContent = 'Something went wrong. Try again.';
-      btn.disabled = false;
-      btn.textContent = 'Unlock';
+    const pw = document.getElementById('passwordInput').value;
+    const res = await fetch('/verify-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw })
+    });
+    const data = await res.json();
+    if (data.success) {
+      sessionPassword = pw;
+      document.getElementById('passwordScreen').style.display = 'none';
+      document.getElementById('appScreen').style.display = 'block';
+    } else {
+      document.getElementById('passwordError').textContent = 'Incorrect password. Try again.';
     }
   }
 
@@ -252,22 +273,22 @@
     document.getElementById('emptyState').style.display = 'none';
     document.getElementById('outputContent').style.display = 'none';
     document.getElementById('loadingState').style.display = 'flex';
-
     const formData = {
-      password: sessionPassword,
-      clientName: document.getElementById('clientName').value.trim(),
-      niche: document.getElementById('niche').value.trim(),
-      offer: document.getElementById('offer').value.trim(),
-      audience: document.getElementById('audience').value.trim(),
-      tone: document.getElementById('tone').value.trim(),
-      packageTier: document.getElementById('packageTier').value,
-      videoType: document.getElementById('videoType').value,
-      videoLength: document.getElementById('videoLength').value,
-      topic: document.getElementById('topic').value.trim(),
-      cta: document.getElementById('cta').value,
-      notes: document.getElementById('notes').value.trim(),
+      password:     sessionPassword,
+      clientName:   document.getElementById('clientName').value.trim(),
+      niche:        document.getElementById('niche').value.trim(),
+      offer:        document.getElementById('offer').value.trim(),
+      audience:     document.getElementById('audience').value.trim(),
+      tone:         document.getElementById('tone').value.trim(),
+      packageTier:  document.getElementById('packageTier').value,
+      videoLength:  document.getElementById('videoLength').value,
+      topic:        document.getElementById('topic').value.trim(),
+      cta:          document.getElementById('cta').value,
+      hookCategory: document.getElementById('hookCategory').value,
+      template:     document.getElementById('template').value,
+      videoFormat:  document.getElementById('videoFormat').value,
+      notes:        document.getElementById('notes').value.trim(),
     };
-
     try {
       const res = await fetch('/generate', {
         method: 'POST',
@@ -277,8 +298,13 @@
       const data = await res.json();
       if (data.error) throw new Error(data.error);
       lastScript = data.script;
-      document.getElementById('outputTitle').textContent = formData.clientName + ' — ' + formData.videoType;
-      document.getElementById('outputMeta').innerHTML = '<span>' + formData.videoLength.split(' (')[0] + '</span> &nbsp;·&nbsp; ' + formData.packageTier + ' &nbsp;·&nbsp; ' + formData.topic;
+      document.getElementById('outputTitle').textContent = formData.clientName + ' — ' + formData.topic;
+      document.getElementById('outputMeta').textContent = formData.videoLength.split(' (')[0];
+      const hookLabel = document.getElementById('hookCategory').options[document.getElementById('hookCategory').selectedIndex].text;
+      const templateLabel = document.getElementById('template').options[document.getElementById('template').selectedIndex].text;
+      const formatLabel = document.getElementById('videoFormat').options[document.getElementById('videoFormat').selectedIndex].text;
+      document.getElementById('outputTags').innerHTML =
+        '<span class="tag gold">' + hookLabel + '</span><span class="tag">' + templateLabel + '</span><span class="tag">' + formatLabel + '</span>';
       const formatted = data.script
         .replace(/\[EDITOR NOTE: (.*?)\]/g, '<span class="editor-note">[EDITOR NOTE: $1]</span>')
         .replace(/^(HOOK:|BODY:|CTA:)/gm, '<span class="section-label">$1</span>');
