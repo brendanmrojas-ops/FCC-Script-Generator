@@ -1,1 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>First Class Creators | Script Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --black: #0A0A0A;
+    --panel: #141414;
+    --gray-light: #E8E8E8;
+    --gray-mid: #9A9A9A;
+    --gray-box: #2A2A2A;
+  }
 
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--black);
+    color: var(--gray-light);
+    font-family: 'Inter', sans-serif;
+    padding: 40px 20px;
+  }
+
+  .app {
+    max-width: 880px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 800;
+    font-size: 2.4rem;
+    color: #FFFFFF;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+
+  header h1 span {
+    color: var(--gold);
+  }
+
+  header p {
+    color: var(--gray-mid);
+    margin-top: 8px;
+    font-size: 0.95rem;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid #2A2A2A;
+    border-radius: 14px;
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    background: #1C1C1C;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+
+  .field textarea {
+    min-height: 90px;
+    resize: vertical;
+  }
+
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .row-2, .row-3 { grid-template-columns: 1fr; }
+  }
+
+  .vault-box {
+    background: #EDEDED;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .vault-box .vault-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 1.1rem;
+    margin: 0 0 16px 0;
+    letter-spacing: 0.5px;
+  }
+
+  .vault-box .field label {
+    color: #6B5A28;
+  }
+
+  .vault-box .field select {
+    background: #FFFFFF;
+    color: #1A1A1A;
+    border: 1px solid #CFCFCF;
+  }
+
+  .vault-box .field select:focus {
+    border-color: var(--gold);
+  }
+
+  .vault-box .field {
+    margin-bottom: 0;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    background: var(--gold);
+    color: #1A1500;
+    border: none;
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: opacity 0.15s ease;
+  }
+
+  button[type="submit"]:hover {
+    opacity: 0.9;
+  }
+
+  button[type="submit"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  #output-panel {
+    display: none;
+  }
+
+  #output-panel.visible {
+    display: block;
+  }
+
+  .output-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 0 0 12px 0;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+
+  .tag-hook {
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--gold);
+    border: 1px solid rgba(201, 168, 76, 0.4);
+  }
+
+  .tag-gray {
+    background: rgba(154, 154, 154, 0.12);
+    color: var(--gray-mid);
+    border: 1px solid rgba(154, 154, 154, 0.35);
+  }
+
+  .script-output {
+    background: #1C1C1C;
+    border: 1px solid #2A2A2A;
+    border-radius: 10px;
+    padding: 24px;
+    white-space: pre-wrap;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--gray-light);
+  }
+
+  .status {
+    text-align: center;
+    color: var(--gray-mid);
+    font-size: 0.9rem;
+    margin-top: 12px;
+  }
+
+  .status.error {
+    color: #D96C6C;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>First Class <span>Creators</span></h1>
+    <p>Script Generator</p>
+  </header>
+
+  <div class="card">
+    <form id="script-form">
+      <div class="field">
+        <label for="clientName">Client Name</label>
+        <input type="text" id="clientName" name="clientName" required>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label for="niche">Niche</label>
+          <input type="text" id="niche" name="niche" required>
+        </div>
+        <div class="field">
+          <label for="packageTier">Package Tier</label>
+          <select id="packageTier" name="packageTier" required>
+            <option value="12">12 scripts / month</option>
+            <option value="20">20 scripts / month</option>
+            <option value="30">30 scripts / month</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="offer">Their Offer</label>
+        <textarea id="offer" name="offer" required></textarea>
+      </div>
+
+      <div class="field">
+        <label for="targetAudience">Target Audience</label>
+        <textarea id="targetAudience" name="targetAudience" required></textarea>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label for="toneOfVoice">Tone of Voice</label>
+          <input type="text" id="toneOfVoice" name="toneOfVoice" required>
+        </div>
+        <div class="field">
+          <label for="videoLength">Video Length</label>
+          <select id="videoLength" name="videoLength" required>
+            <option value="30">30 seconds</option>
+            <option value="60">60 seconds</option>
+            <option value="80">80 seconds</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="scriptTopic">Script Topic</label>
+        <input type="text" id="scriptTopic" name="scriptTopic" required>
+      </div>
+
+      <div class="field">
+        <label for="callToAction">Call to Action</label>
+        <input type="text" id="callToAction" name="callToAction" required>
+      </div>
+
+      <div class="vault-box">
+        <p class="vault-title">Vault Selectors</p>
+        <div class="row-3">
+          <div class="field">
+            <label for="hookCategory">Hook Category</label>
+            <select id="hookCategory" name="hookCategory">
+              <option value="Any AI chooses best">Any AI chooses best</option>
+              <option value="Education">Education</option>
+              <option value="Myth Busting">Myth Busting</option>
+              <option value="Step-by-Step System">Step-by-Step System</option>
+              <option value="Common Mistakes">Common Mistakes</option>
+              <option value="Authority Results">Authority Results</option>
+              <option value="Storytelling">Storytelling</option>
+              <option value="Comparison">Comparison</option>
+              <option value="Day in the Life">Day in the Life</option>
+              <option value="Viral Pattern">Viral Pattern</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="template">Script Template</label>
+            <select id="template" name="template">
+              <option value="Any AI chooses best">Any AI chooses best</option>
+              <option value="Educational Tip">Educational Tip</option>
+              <option value="Step-by-Step">Step-by-Step</option>
+              <option value="Common Mistake">Common Mistake</option>
+              <option value="Myth Busting">Myth Busting</option>
+              <option value="Before and After Bridge">Before and After Bridge</option>
+              <option value="Authority Credibility">Authority Credibility</option>
+              <option value="Controversial Opinion">Controversial Opinion</option>
+              <option value="Heros Journey">Heros Journey</option>
+              <option value="Man in a Hole">Man in a Hole</option>
+              <option value="The Expose">The Expose</option>
+              <option value="Comparison">Comparison</option>
+              <option value="Client Transformation">Client Transformation</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="videoFormat">Video Format</label>
+            <select id="videoFormat" name="videoFormat">
+              <option value="Talking Head">Talking Head</option>
+              <option value="Voice-Over with B-Roll">Voice-Over with B-Roll</option>
+              <option value="Text-Hook Loop">Text-Hook Loop</option>
+              <option value="Mixed Format">Mixed Format</option>
+              <option value="Green Screen">Green Screen</option>
+              <option value="Skit Roleplay">Skit Roleplay</option>
+              <option value="POV">POV</option>
+              <option value="Day in the Life Vlog">Day in the Life Vlog</option>
+              <option value="Case Study Teardown">Case Study Teardown</option>
+              <option value="Watch Me Work ASMR">Watch Me Work ASMR</option>
+              <option value="Interview QA">Interview QA</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="additionalNotes">Additional Notes</label>
+        <textarea id="additionalNotes" name="additionalNotes"></textarea>
+      </div>
+
+      <button type="submit" id="submit-btn">Generate Script</button>
+      <div class="status" id="status"></div>
+    </form>
+  </div>
+
+  <div class="card" id="output-panel">
+    <h2 class="output-title" id="output-title"></h2>
+    <div class="tag-row" id="tag-row"></div>
+    <div class="script-output" id="script-output"></div>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('script-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const statusEl = document.getElementById('status');
+  const outputPanel = document.getElementById('output-panel');
+  const outputTitle = document.getElementById('output-title');
+  const tagRow = document.getElementById('tag-row');
+  const scriptOutput = document.getElementById('script-output');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = {
+      clientName: document.getElementById('clientName').value,
+      niche: document.getElementById('niche').value,
+      packageTier: document.getElementById('packageTier').value,
+      offer: document.getElementById('offer').value,
+      targetAudience: document.getElementById('targetAudience').value,
+      toneOfVoice: document.getElementById('toneOfVoice').value,
+      videoLength: document.getElementById('videoLength').value,
+      scriptTopic: document.getElementById('scriptTopic').value,
+      callToAction: document.getElementById('callToAction').value,
+      hookCategory: document.getElementById('hookCategory').value,
+      template: document.getElementById('template').value,
+      videoFormat: document.getElementById('videoFormat').value,
+      additionalNotes: document.getElementById('additionalNotes').value
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Generating...';
+    statusEl.textContent = '';
+    statusEl.classList.remove('error');
+    outputPanel.classList.remove('visible');
+
+    try {
+      const res = await fetch('/api/generate-script', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Something went wrong generating the script.');
+      }
+
+      const data = await res.json();
+
+      outputTitle.textContent = `Script for ${formData.clientName} — ${formData.scriptTopic}`;
+
+      tagRow.innerHTML = '';
+      const hookTag = document.createElement('span');
+      hookTag.className = 'tag tag-hook';
+      hookTag.textContent = data.hookCategory || formData.hookCategory;
+      tagRow.appendChild(hookTag);
+
+      const templateTag = document.createElement('span');
+      templateTag.className = 'tag tag-gray';
+      templateTag.textContent = data.template || formData.template;
+      tagRow.appendChild(templateTag);
+
+      const formatTag = document.createElement('span');
+      formatTag.className = 'tag tag-gray';
+      formatTag.textContent = data.videoFormat || formData.videoFormat;
+      tagRow.appendChild(formatTag);
+
+      scriptOutput.textContent = data.script;
+      outputPanel.classList.add('visible');
+      outputPanel.scrollIntoView({ behavior: 'smooth' });
+    } catch (err) {
+      statusEl.textContent = err.message;
+      statusEl.classList.add('error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Generate Script';
+    }
+  });
+</script>
+</body>
+</html>
