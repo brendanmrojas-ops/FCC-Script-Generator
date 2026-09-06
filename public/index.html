@@ -3,462 +3,313 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>First Class Creators | Script Generator</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<title>FCC Script Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --gold: #C9A84C;
-    --black: #0A0A0A;
-    --panel: #141414;
-    --gray-light: #E8E8E8;
-    --gray-mid: #9A9A9A;
-    --gray-box: #2A2A2A;
-  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #F7F6F2; color: #1a1a1a; min-height: 100vh; }
+  header { background: #0D0D0D; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #C9A84C; }
+  .logo { font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; letter-spacing: .04em; }
+  .logo span { color: #C9A84C; }
+  .header-tag { font-size: 11px; font-weight: 500; color: #888; letter-spacing: .12em; text-transform: uppercase; }
 
-  * { box-sizing: border-box; }
+  /* PASSWORD SCREEN */
+  .password-screen { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 58px); }
+  .password-card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 40px; width: 100%; max-width: 400px; text-align: center; }
+  .password-card .lock-icon { font-size: 32px; margin-bottom: 16px; }
+  .password-card h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: #1a1a1a; margin-bottom: 8px; }
+  .password-card p { font-size: 13px; color: #888; margin-bottom: 24px; }
+  .password-card input { width: 100%; border: 1px solid #E0DEDC; border-radius: 5px; padding: 11px 14px; font-size: 14px; color: #1a1a1a; background: #FAFAF8; font-family: 'Inter', sans-serif; margin-bottom: 12px; text-align: center; letter-spacing: .08em; }
+  .password-card input:focus { outline: none; border-color: #C9A84C; background: #fff; }
+  .btn-unlock { width: 100%; background: #C9A84C; color: #0D0D0D; border: none; padding: 12px; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+  .btn-unlock:hover { background: #B8963C; }
+  .btn-unlock:disabled { opacity: .5; cursor: not-allowed; }
+  .pw-error { font-size: 12px; color: #c0392b; margin-top: 8px; min-height: 16px; }
 
-  body {
-    margin: 0;
-    background: var(--black);
-    color: var(--gray-light);
-    font-family: 'Inter', sans-serif;
-    padding: 40px 20px;
-  }
-
-  .app {
-    max-width: 880px;
-    margin: 0 auto;
-  }
-
-  header {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-
-  header h1 {
-    font-family: 'Playfair Display', serif;
-    font-weight: 800;
-    font-size: 2.4rem;
-    color: #FFFFFF;
-    margin: 0;
-    letter-spacing: 0.5px;
-  }
-
-  header h1 span {
-    color: var(--gold);
-  }
-
-  header p {
-    color: var(--gray-mid);
-    margin-top: 8px;
-    font-size: 0.95rem;
-  }
-
-  .card {
-    background: var(--panel);
-    border: 1px solid #2A2A2A;
-    border-radius: 14px;
-    padding: 32px;
-    margin-bottom: 24px;
-  }
-
-  .field {
-    margin-bottom: 20px;
-  }
-
-  .field label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--gold);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .field input,
-  .field select,
-  .field textarea {
-    width: 100%;
-    background: #1C1C1C;
-    border: 1px solid #333;
-    border-radius: 8px;
-    padding: 12px 14px;
-    color: #FFFFFF;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.95rem;
-  }
-
-  .field input:focus,
-  .field select:focus,
-  .field textarea:focus {
-    outline: none;
-    border-color: var(--gold);
-  }
-
-  .field textarea {
-    min-height: 90px;
-    resize: vertical;
-  }
-
-  .row-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-
-  .row-3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-  }
-
-  @media (max-width: 640px) {
-    .row-2, .row-3 { grid-template-columns: 1fr; }
-  }
-
-  .vault-box {
-    background: #EDEDED;
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 20px;
-  }
-
-  .vault-box .vault-title {
-    font-family: 'Playfair Display', serif;
-    font-weight: 700;
-    color: var(--gold);
-    font-size: 1.1rem;
-    margin: 0 0 16px 0;
-    letter-spacing: 0.5px;
-  }
-
-  .vault-box .field label {
-    color: #6B5A28;
-  }
-
-  .vault-box .field select {
-    background: #FFFFFF;
-    color: #1A1A1A;
-    border: 1px solid #CFCFCF;
-  }
-
-  .vault-box .field select:focus {
-    border-color: var(--gold);
-  }
-
-  .vault-box .field {
-    margin-bottom: 0;
-  }
-
-  button[type="submit"] {
-    width: 100%;
-    background: var(--gold);
-    color: #1A1500;
-    border: none;
-    border-radius: 8px;
-    padding: 16px;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: opacity 0.15s ease;
-  }
-
-  button[type="submit"]:hover {
-    opacity: 0.9;
-  }
-
-  button[type="submit"]:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  #output-panel {
-    display: none;
-  }
-
-  #output-panel.visible {
-    display: block;
-  }
-
-  .output-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #FFFFFF;
-    margin: 0 0 12px 0;
-  }
-
-  .tag-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-
-  .tag {
-    display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 20px;
-    letter-spacing: 0.3px;
-  }
-
-  .tag-hook {
-    background: rgba(201, 168, 76, 0.15);
-    color: var(--gold);
-    border: 1px solid rgba(201, 168, 76, 0.4);
-  }
-
-  .tag-gray {
-    background: rgba(154, 154, 154, 0.12);
-    color: var(--gray-mid);
-    border: 1px solid rgba(154, 154, 154, 0.35);
-  }
-
-  .script-output {
-    background: #1C1C1C;
-    border: 1px solid #2A2A2A;
-    border-radius: 10px;
-    padding: 24px;
-    white-space: pre-wrap;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: var(--gray-light);
-  }
-
-  .status {
-    text-align: center;
-    color: var(--gray-mid);
-    font-size: 0.9rem;
-    margin-top: 12px;
-  }
-
-  .status.error {
-    color: #D96C6C;
-  }
+  /* MAIN APP */
+  .app-screen { display: none; }
+  .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 420px 1fr; gap: 24px; align-items: start; }
+  .card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 28px; }
+  .card-title { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #C9A84C; margin-bottom: 20px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 11px; font-weight: 600; color: #555; margin-bottom: 5px; letter-spacing: .04em; }
+  .field label .req { color: #C9A84C; }
+  input, select, textarea { width: 100%; border: 1px solid #E0DEDC; border-radius: 5px; padding: 9px 12px; font-size: 13px; color: #1a1a1a; background: #FAFAF8; font-family: 'Inter', sans-serif; transition: border-color .15s; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: #C9A84C; background: #fff; }
+  textarea { min-height: 72px; resize: vertical; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .divider { border: none; border-top: 1px solid #F0EFEB; margin: 20px 0; }
+  .btn-generate { width: 100%; background: #C9A84C; color: #0D0D0D; border: none; padding: 13px; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background .15s; margin-top: 4px; }
+  .btn-generate:hover { background: #B8963C; }
+  .btn-generate:disabled { opacity: .5; cursor: not-allowed; }
+  .error-msg { font-size: 12px; color: #c0392b; margin-top: 6px; min-height: 16px; }
+  .output-card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 28px; position: sticky; top: 24px; }
+  .output-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #F0EFEB; }
+  .output-title { font-family: 'Playfair Display', serif; font-size: 16px; color: #1a1a1a; }
+  .output-meta { font-size: 11px; color: #888; margin-top: 3px; }
+  .output-meta span { color: #C9A84C; font-weight: 600; }
+  .btn-copy { background: #0D0D0D; color: #fff; border: none; padding: 8px 16px; border-radius: 5px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; transition: background .15s; flex-shrink: 0; }
+  .btn-copy:hover { background: #333; }
+  .script-output { font-size: 14px; line-height: 1.85; color: #1a1a1a; white-space: pre-wrap; min-height: 300px; }
+  .script-output .editor-note { color: #C9A84C; font-style: italic; font-size: 13px; }
+  .script-output .section-label { font-weight: 600; color: #0D0D0D; font-size: 13px; letter-spacing: .06em; }
+  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; color: #aaa; text-align: center; }
+  .empty-state .icon { font-size: 36px; margin-bottom: 12px; opacity: .3; }
+  .empty-state p { font-size: 13px; line-height: 1.6; }
+  .loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; color: #888; gap: 16px; }
+  .dots { display: flex; gap: 6px; }
+  .dots span { width: 8px; height: 8px; border-radius: 50%; background: #C9A84C; animation: pulse .9s infinite; }
+  .dots span:nth-child(2) { animation-delay: .2s; }
+  .dots span:nth-child(3) { animation-delay: .4s; }
+  @keyframes pulse { 0%, 80%, 100% { transform: scale(1); opacity: .6; } 40% { transform: scale(1.3); opacity: 1; } }
+  .new-script-btn { background: transparent; border: 1px solid #E0DEDC; color: #555; padding: 8px 14px; border-radius: 5px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 20px; transition: all .15s; }
+  .new-script-btn:hover { border-color: #C9A84C; color: #C9A84C; }
+  @media (max-width: 800px) { .main { grid-template-columns: 1fr; } header { padding: 14px 20px; } }
 </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <h1>First Class <span>Creators</span></h1>
-    <p>Script Generator</p>
-  </header>
 
-  <div class="card">
-    <form id="script-form">
-      <div class="field">
-        <label for="clientName">Client Name</label>
-        <input type="text" id="clientName" name="clientName" required>
-      </div>
+<header>
+  <div class="logo">First Class <span>Creators</span></div>
+  <div class="header-tag">Script Generator</div>
+</header>
 
-      <div class="row-2">
-        <div class="field">
-          <label for="niche">Niche</label>
-          <input type="text" id="niche" name="niche" required>
-        </div>
-        <div class="field">
-          <label for="packageTier">Package Tier</label>
-          <select id="packageTier" name="packageTier" required>
-            <option value="12">12 scripts / month</option>
-            <option value="20">20 scripts / month</option>
-            <option value="30">30 scripts / month</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="offer">Their Offer</label>
-        <textarea id="offer" name="offer" required></textarea>
-      </div>
-
-      <div class="field">
-        <label for="targetAudience">Target Audience</label>
-        <textarea id="targetAudience" name="targetAudience" required></textarea>
-      </div>
-
-      <div class="row-2">
-        <div class="field">
-          <label for="toneOfVoice">Tone of Voice</label>
-          <input type="text" id="toneOfVoice" name="toneOfVoice" required>
-        </div>
-        <div class="field">
-          <label for="videoLength">Video Length</label>
-          <select id="videoLength" name="videoLength" required>
-            <option value="30">30 seconds</option>
-            <option value="60">60 seconds</option>
-            <option value="80">80 seconds</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="scriptTopic">Script Topic</label>
-        <input type="text" id="scriptTopic" name="scriptTopic" required>
-      </div>
-
-      <div class="field">
-        <label for="callToAction">Call to Action</label>
-        <input type="text" id="callToAction" name="callToAction" required>
-      </div>
-
-      <div class="vault-box">
-        <p class="vault-title">Vault Selectors</p>
-        <div class="row-3">
-          <div class="field">
-            <label for="hookCategory">Hook Category</label>
-            <select id="hookCategory" name="hookCategory">
-              <option value="Any AI chooses best">Any AI chooses best</option>
-              <option value="Education">Education</option>
-              <option value="Myth Busting">Myth Busting</option>
-              <option value="Step-by-Step System">Step-by-Step System</option>
-              <option value="Common Mistakes">Common Mistakes</option>
-              <option value="Authority Results">Authority Results</option>
-              <option value="Storytelling">Storytelling</option>
-              <option value="Comparison">Comparison</option>
-              <option value="Day in the Life">Day in the Life</option>
-              <option value="Viral Pattern">Viral Pattern</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="template">Script Template</label>
-            <select id="template" name="template">
-              <option value="Any AI chooses best">Any AI chooses best</option>
-              <option value="Educational Tip">Educational Tip</option>
-              <option value="Step-by-Step">Step-by-Step</option>
-              <option value="Common Mistake">Common Mistake</option>
-              <option value="Myth Busting">Myth Busting</option>
-              <option value="Before and After Bridge">Before and After Bridge</option>
-              <option value="Authority Credibility">Authority Credibility</option>
-              <option value="Controversial Opinion">Controversial Opinion</option>
-              <option value="Heros Journey">Heros Journey</option>
-              <option value="Man in a Hole">Man in a Hole</option>
-              <option value="The Expose">The Expose</option>
-              <option value="Comparison">Comparison</option>
-              <option value="Client Transformation">Client Transformation</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="videoFormat">Video Format</label>
-            <select id="videoFormat" name="videoFormat">
-              <option value="Talking Head">Talking Head</option>
-              <option value="Voice-Over with B-Roll">Voice-Over with B-Roll</option>
-              <option value="Text-Hook Loop">Text-Hook Loop</option>
-              <option value="Mixed Format">Mixed Format</option>
-              <option value="Green Screen">Green Screen</option>
-              <option value="Skit Roleplay">Skit Roleplay</option>
-              <option value="POV">POV</option>
-              <option value="Day in the Life Vlog">Day in the Life Vlog</option>
-              <option value="Case Study Teardown">Case Study Teardown</option>
-              <option value="Watch Me Work ASMR">Watch Me Work ASMR</option>
-              <option value="Interview QA">Interview QA</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="additionalNotes">Additional Notes</label>
-        <textarea id="additionalNotes" name="additionalNotes"></textarea>
-      </div>
-
-      <button type="submit" id="submit-btn">Generate Script</button>
-      <div class="status" id="status"></div>
-    </form>
+<!-- PASSWORD SCREEN -->
+<div class="password-screen" id="passwordScreen">
+  <div class="password-card">
+    <div class="lock-icon">🔐</div>
+    <h2>Team Access Only</h2>
+    <p>Enter your access password to continue.</p>
+    <input type="password" id="pwInput" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlock()">
+    <button class="btn-unlock" id="unlockBtn" onclick="unlock()">Unlock</button>
+    <div class="pw-error" id="pwError"></div>
   </div>
+</div>
 
-  <div class="card" id="output-panel">
-    <h2 class="output-title" id="output-title"></h2>
-    <div class="tag-row" id="tag-row"></div>
-    <div class="script-output" id="script-output"></div>
+<!-- MAIN APP -->
+<div class="app-screen" id="appScreen">
+  <div class="main">
+    <div class="card">
+      <div class="card-title">Client info</div>
+      <div class="field">
+        <label>Client name <span class="req">*</span></label>
+        <input type="text" id="clientName" placeholder="e.g. John Smith">
+      </div>
+      <div class="row">
+        <div class="field">
+          <label>Niche <span class="req">*</span></label>
+          <input type="text" id="niche" placeholder="e.g. Fitness coaching">
+        </div>
+        <div class="field">
+          <label>Package tier</label>
+          <select id="packageTier">
+            <option value="12 scripts/month">12 per month</option>
+            <option value="20 scripts/month">20 per month</option>
+            <option value="30 scripts/month">30 per month</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Their offer <span class="req">*</span></label>
+        <input type="text" id="offer" placeholder="e.g. Online running coaching, $500/month">
+      </div>
+      <div class="field">
+        <label>Target audience <span class="req">*</span></label>
+        <input type="text" id="audience" placeholder="e.g. Beginners who want to run their first 5K">
+      </div>
+      <div class="field">
+        <label>Tone of voice</label>
+        <input type="text" id="tone" placeholder="e.g. Energetic, direct, no fluff">
+      </div>
+      <hr class="divider">
+      <div class="card-title">Script settings</div>
+      <div class="row">
+        <div class="field">
+          <label>Video type</label>
+          <select id="videoType">
+            <option>Talking Head</option>
+            <option>Voiceover Broll</option>
+            <option>Sales Talking Head</option>
+            <option>Reaction</option>
+            <option>Split Screen</option>
+            <option>Exercise Demo</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Length</label>
+          <select id="videoLength">
+            <option value="30 seconds (65-75 words)">30 seconds</option>
+            <option value="60 seconds (130-150 words)" selected>60 seconds</option>
+            <option value="80 seconds (175-195 words)">80 seconds</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Script topic / angle <span class="req">*</span></label>
+        <input type="text" id="topic" placeholder="e.g. 3 mistakes beginner runners make">
+      </div>
+      <div class="field">
+        <label>Call to action</label>
+        <select id="cta">
+          <option value="Comment COACH below and I will send you my free training plan">Comment COACH</option>
+          <option value="Comment GUIDE below for a free resource">Comment GUIDE</option>
+          <option value="Follow for more tips like this">Follow for more</option>
+          <option value="Save this video to come back to it">Save this video</option>
+          <option value="DM me and lets talk about working together">DM to work together</option>
+          <option value="Link in bio to get started today">Link in bio</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Additional notes (optional)</label>
+        <textarea id="notes" placeholder="e.g. Avoid injury talk. Client ran Boston Marathon. Keep it punchy."></textarea>
+      </div>
+      <div class="error-msg" id="errMsg"></div>
+      <button class="btn-generate" id="genBtn" onclick="generate()">Generate script</button>
+    </div>
+
+    <div class="output-card" id="outputCard">
+      <div class="empty-state" id="emptyState">
+        <div class="icon">✦</div>
+        <p>Fill in the client info and script settings,<br>then hit Generate script.</p>
+      </div>
+      <div id="outputContent" style="display:none;">
+        <div class="output-header">
+          <div>
+            <div class="output-title" id="outputTitle"></div>
+            <div class="output-meta" id="outputMeta"></div>
+          </div>
+          <button class="btn-copy" onclick="copyScript()">Copy script</button>
+        </div>
+        <div class="script-output" id="scriptOutput"></div>
+        <button class="new-script-btn" onclick="resetForm()">Generate another script</button>
+      </div>
+      <div id="loadingState" style="display:none;" class="loading-state">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <div style="font-size:13px;">Writing your script...</div>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-  const form = document.getElementById('script-form');
-  const submitBtn = document.getElementById('submit-btn');
-  const statusEl = document.getElementById('status');
-  const outputPanel = document.getElementById('output-panel');
-  const outputTitle = document.getElementById('output-title');
-  const tagRow = document.getElementById('tag-row');
-  const scriptOutput = document.getElementById('script-output');
+  let lastScript = '';
+  let sessionPassword = '';
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  async function unlock() {
+    const pw = document.getElementById('pwInput').value.trim();
+    if (!pw) { document.getElementById('pwError').textContent = 'Please enter a password.'; return; }
+    const btn = document.getElementById('unlockBtn');
+    btn.disabled = true;
+    btn.textContent = 'Checking...';
+    try {
+      const res = await fetch('/verify-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pw })
+      });
+      const data = await res.json();
+      if (data.success) {
+        sessionPassword = pw;
+        document.getElementById('passwordScreen').style.display = 'none';
+        document.getElementById('appScreen').style.display = 'block';
+      } else {
+        document.getElementById('pwError').textContent = 'Incorrect password. Try again.';
+        document.getElementById('pwInput').value = '';
+        btn.disabled = false;
+        btn.textContent = 'Unlock';
+      }
+    } catch (err) {
+      document.getElementById('pwError').textContent = 'Something went wrong. Try again.';
+      btn.disabled = false;
+      btn.textContent = 'Unlock';
+    }
+  }
+
+  function validate() {
+    const fields = [
+      { id: 'clientName', label: 'Client name' },
+      { id: 'niche', label: 'Niche' },
+      { id: 'offer', label: 'Their offer' },
+      { id: 'audience', label: 'Target audience' },
+      { id: 'topic', label: 'Script topic' },
+    ];
+    for (const f of fields) {
+      if (!document.getElementById(f.id).value.trim()) {
+        document.getElementById('errMsg').textContent = f.label + ' is required.';
+        document.getElementById(f.id).focus();
+        return false;
+      }
+    }
+    document.getElementById('errMsg').textContent = '';
+    return true;
+  }
+
+  async function generate() {
+    if (!validate()) return;
+    const btn = document.getElementById('genBtn');
+    btn.disabled = true;
+    btn.textContent = 'Generating...';
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('outputContent').style.display = 'none';
+    document.getElementById('loadingState').style.display = 'flex';
 
     const formData = {
-      clientName: document.getElementById('clientName').value,
-      niche: document.getElementById('niche').value,
+      password: sessionPassword,
+      clientName: document.getElementById('clientName').value.trim(),
+      niche: document.getElementById('niche').value.trim(),
+      offer: document.getElementById('offer').value.trim(),
+      audience: document.getElementById('audience').value.trim(),
+      tone: document.getElementById('tone').value.trim(),
       packageTier: document.getElementById('packageTier').value,
-      offer: document.getElementById('offer').value,
-      targetAudience: document.getElementById('targetAudience').value,
-      toneOfVoice: document.getElementById('toneOfVoice').value,
+      videoType: document.getElementById('videoType').value,
       videoLength: document.getElementById('videoLength').value,
-      scriptTopic: document.getElementById('scriptTopic').value,
-      callToAction: document.getElementById('callToAction').value,
-      hookCategory: document.getElementById('hookCategory').value,
-      template: document.getElementById('template').value,
-      videoFormat: document.getElementById('videoFormat').value,
-      additionalNotes: document.getElementById('additionalNotes').value
+      topic: document.getElementById('topic').value.trim(),
+      cta: document.getElementById('cta').value,
+      notes: document.getElementById('notes').value.trim(),
     };
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Generating...';
-    statusEl.textContent = '';
-    statusEl.classList.remove('error');
-    outputPanel.classList.remove('visible');
-
     try {
-      const res = await fetch('/api/generate-script', {
+      const res = await fetch('/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || 'Something went wrong generating the script.');
-      }
-
       const data = await res.json();
-
-      outputTitle.textContent = `Script for ${formData.clientName} — ${formData.scriptTopic}`;
-
-      tagRow.innerHTML = '';
-      const hookTag = document.createElement('span');
-      hookTag.className = 'tag tag-hook';
-      hookTag.textContent = data.hookCategory || formData.hookCategory;
-      tagRow.appendChild(hookTag);
-
-      const templateTag = document.createElement('span');
-      templateTag.className = 'tag tag-gray';
-      templateTag.textContent = data.template || formData.template;
-      tagRow.appendChild(templateTag);
-
-      const formatTag = document.createElement('span');
-      formatTag.className = 'tag tag-gray';
-      formatTag.textContent = data.videoFormat || formData.videoFormat;
-      tagRow.appendChild(formatTag);
-
-      scriptOutput.textContent = data.script;
-      outputPanel.classList.add('visible');
-      outputPanel.scrollIntoView({ behavior: 'smooth' });
+      if (data.error) throw new Error(data.error);
+      lastScript = data.script;
+      document.getElementById('outputTitle').textContent = formData.clientName + ' — ' + formData.videoType;
+      document.getElementById('outputMeta').innerHTML = '<span>' + formData.videoLength.split(' (')[0] + '</span> &nbsp;·&nbsp; ' + formData.packageTier + ' &nbsp;·&nbsp; ' + formData.topic;
+      const formatted = data.script
+        .replace(/\[EDITOR NOTE: (.*?)\]/g, '<span class="editor-note">[EDITOR NOTE: $1]</span>')
+        .replace(/^(HOOK:|BODY:|CTA:)/gm, '<span class="section-label">$1</span>');
+      document.getElementById('scriptOutput').innerHTML = formatted;
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('outputContent').style.display = 'block';
     } catch (err) {
-      statusEl.textContent = err.message;
-      statusEl.classList.add('error');
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Generate Script';
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('emptyState').style.display = 'flex';
+      document.getElementById('errMsg').textContent = 'Error: ' + err.message;
     }
-  });
+    btn.disabled = false;
+    btn.textContent = 'Generate script';
+  }
+
+  function copyScript() {
+    if (!lastScript) return;
+    navigator.clipboard.writeText(lastScript).then(() => {
+      const btn = document.querySelector('.btn-copy');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy script'; }, 2000);
+    });
+  }
+
+  function resetForm() {
+    document.getElementById('topic').value = '';
+    document.getElementById('notes').value = '';
+    document.getElementById('outputContent').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'flex';
+    document.getElementById('topic').focus();
+  }
 </script>
 </body>
 </html>
