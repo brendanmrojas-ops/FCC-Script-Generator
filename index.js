@@ -8,23 +8,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-const APP_PASSWORD = process.env.APP_PASSWORD;
-
-app.post('/verify-password', (req, res) => {
-  const { password } = req.body;
-  if (password === APP_PASSWORD) {
-    res.json({ success: true });
-  } else {
-    res.status(401).json({ success: false, error: 'Incorrect password.' });
-  }
-});
 
 app.post('/generate', async (req, res) => {
-  const { password, ...formData } = req.body;
-
-  if (password !== APP_PASSWORD) {
-    return res.status(401).json({ error: 'Unauthorized.' });
-  }
+  const f = req.body;
 
   const systemPrompt = `You are an expert short-form video scriptwriter for First Class Creators, a premium content agency. You write scripts for coaches, course creators, and digital service providers who film themselves on their phones for Instagram Reels.
 
@@ -42,19 +28,30 @@ FORMATTING RULES:
 
 OUTPUT: Return only the formatted script. No preamble, no explanation, no commentary.`;
 
-  const userPrompt = `Write a ${formData.videoLength} ${formData.videoType} script for the following client:
+  const userPrompt = `Write a ${f.videoLength} script for the following client.
 
-CLIENT: ${formData.clientName}
-NICHE: ${formData.niche}
-OFFER: ${formData.offer}
-TARGET AUDIENCE: ${formData.audience}
-TONE OF VOICE: ${formData.tone || 'Direct, confident, conversational'}
-PACKAGE: ${formData.packageTier}
-TOPIC: ${formData.topic}
-CTA TO USE: ${formData.cta}
-${formData.notes ? 'ADDITIONAL NOTES: ' + formData.notes : ''}
+CLIENT: ${f.clientName}
+NICHE: ${f.niche}
+OFFER: ${f.offer}
+TARGET AUDIENCE: ${f.audience}
+TONE OF VOICE: ${f.tone || 'Direct, confident, conversational'}
+PACKAGE: ${f.packageTier}
+TOPIC: ${f.topic}
+CTA TO USE: ${f.cta}
+${f.notes ? 'ADDITIONAL NOTES: ' + f.notes : ''}
 
-Write the full script now. Include editor notes in [EDITOR NOTE: ...] brackets where relevant.`;
+VAULT INSTRUCTIONS:
+
+HOOK CATEGORY: ${f.hookCategory}
+Use this hook style to open the video. The hook must match this category and grab attention in the first 2 seconds.
+
+SCRIPT TEMPLATE: ${f.template}
+Structure the body of the script using this template framework.
+
+VIDEO FORMAT: ${f.videoFormat}
+Write the script and editor notes to match this production format. Include [EDITOR NOTE: ...] instructions that tell the editor how to film and edit this specific format.
+
+Write the full script now.`;
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
