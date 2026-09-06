@@ -1,315 +1,158 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FCC Script Generator</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', sans-serif; background: #F7F6F2; color: #1a1a1a; min-height: 100vh; }
-  header { background: #0D0D0D; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #C9A84C; }
-  .logo { font-family: 'Playfair Display', serif; font-size: 18px; color: #fff; letter-spacing: .04em; }
-  .logo span { color: #C9A84C; }
-  .header-tag { font-size: 11px; font-weight: 500; color: #888; letter-spacing: .12em; text-transform: uppercase; }
+const express = require('express');
+const path = require('path');
 
-  /* PASSWORD SCREEN */
-  .password-screen { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 58px); }
-  .password-card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 40px; width: 100%; max-width: 400px; text-align: center; }
-  .password-card .lock-icon { font-size: 32px; margin-bottom: 16px; }
-  .password-card h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: #1a1a1a; margin-bottom: 8px; }
-  .password-card p { font-size: 13px; color: #888; margin-bottom: 24px; }
-  .password-card input { width: 100%; border: 1px solid #E0DEDC; border-radius: 5px; padding: 11px 14px; font-size: 14px; color: #1a1a1a; background: #FAFAF8; font-family: 'Inter', sans-serif; margin-bottom: 12px; text-align: center; letter-spacing: .08em; }
-  .password-card input:focus { outline: none; border-color: #C9A84C; background: #fff; }
-  .btn-unlock { width: 100%; background: #C9A84C; color: #0D0D0D; border: none; padding: 12px; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
-  .btn-unlock:hover { background: #B8963C; }
-  .btn-unlock:disabled { opacity: .5; cursor: not-allowed; }
-  .pw-error { font-size: 12px; color: #c0392b; margin-top: 8px; min-height: 16px; }
+const app = express();
+const PORT = process.env.PORT || 3000;
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+const CLAUDE_MODEL = 'claude-sonnet-4-6';
 
-  /* MAIN APP */
-  .app-screen { display: none; }
-  .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 420px 1fr; gap: 24px; align-items: start; }
-  .card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 28px; }
-  .card-title { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #C9A84C; margin-bottom: 20px; }
-  .field { margin-bottom: 16px; }
-  .field label { display: block; font-size: 11px; font-weight: 600; color: #555; margin-bottom: 5px; letter-spacing: .04em; }
-  .field label .req { color: #C9A84C; }
-  input, select, textarea { width: 100%; border: 1px solid #E0DEDC; border-radius: 5px; padding: 9px 12px; font-size: 13px; color: #1a1a1a; background: #FAFAF8; font-family: 'Inter', sans-serif; transition: border-color .15s; }
-  input:focus, select:focus, textarea:focus { outline: none; border-color: #C9A84C; background: #fff; }
-  textarea { min-height: 72px; resize: vertical; }
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .divider { border: none; border-top: 1px solid #F0EFEB; margin: 20px 0; }
-  .btn-generate { width: 100%; background: #C9A84C; color: #0D0D0D; border: none; padding: 13px; border-radius: 5px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: background .15s; margin-top: 4px; }
-  .btn-generate:hover { background: #B8963C; }
-  .btn-generate:disabled { opacity: .5; cursor: not-allowed; }
-  .error-msg { font-size: 12px; color: #c0392b; margin-top: 6px; min-height: 16px; }
-  .output-card { background: #fff; border-radius: 8px; border: 0.5px solid #E0DEDC; padding: 28px; position: sticky; top: 24px; }
-  .output-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #F0EFEB; }
-  .output-title { font-family: 'Playfair Display', serif; font-size: 16px; color: #1a1a1a; }
-  .output-meta { font-size: 11px; color: #888; margin-top: 3px; }
-  .output-meta span { color: #C9A84C; font-weight: 600; }
-  .btn-copy { background: #0D0D0D; color: #fff; border: none; padding: 8px 16px; border-radius: 5px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; white-space: nowrap; transition: background .15s; flex-shrink: 0; }
-  .btn-copy:hover { background: #333; }
-  .script-output { font-size: 14px; line-height: 1.85; color: #1a1a1a; white-space: pre-wrap; min-height: 300px; }
-  .script-output .editor-note { color: #C9A84C; font-style: italic; font-size: 13px; }
-  .script-output .section-label { font-weight: 600; color: #0D0D0D; font-size: 13px; letter-spacing: .06em; }
-  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; color: #aaa; text-align: center; }
-  .empty-state .icon { font-size: 36px; margin-bottom: 12px; opacity: .3; }
-  .empty-state p { font-size: 13px; line-height: 1.6; }
-  .loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; color: #888; gap: 16px; }
-  .dots { display: flex; gap: 6px; }
-  .dots span { width: 8px; height: 8px; border-radius: 50%; background: #C9A84C; animation: pulse .9s infinite; }
-  .dots span:nth-child(2) { animation-delay: .2s; }
-  .dots span:nth-child(3) { animation-delay: .4s; }
-  @keyframes pulse { 0%, 80%, 100% { transform: scale(1); opacity: .6; } 40% { transform: scale(1.3); opacity: 1; } }
-  .new-script-btn { background: transparent; border: 1px solid #E0DEDC; color: #555; padding: 8px 14px; border-radius: 5px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; margin-top: 20px; transition: all .15s; }
-  .new-script-btn:hover { border-color: #C9A84C; color: #C9A84C; }
-  @media (max-width: 800px) { .main { grid-template-columns: 1fr; } header { padding: 14px 20px; } }
-</style>
-</head>
-<body>
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-<header>
-  <div class="logo">First Class <span>Creators</span></div>
-  <div class="header-tag">Script Generator</div>
-</header>
+// Format-specific editor notes injected into the Vault Instructions
+// so the script includes direction relevant to how it will be filmed/edited.
+const FORMAT_EDITOR_NOTES = {
+  'Talking Head': 'Write for direct-to-camera delivery. No B-roll cues needed; keep lines punchy enough to hold attention on face alone.',
+  'Voice-Over with B-Roll': 'Write as a voice-over script. After each line or beat, include a bracketed B-ROLL cue suggesting what footage should play under that line.',
+  'Text-Hook Loop': 'Structure the hook as on-screen text that loops or escalates. Include bracketed ON-SCREEN TEXT cues for the hook and key beats.',
+  'Mixed Format': 'Blend direct-to-camera lines with voice-over segments. Include bracketed cues marking which lines are on-camera vs. voice-over/B-roll.',
+  'Green Screen': 'Write for a green screen setup with a background image/video behind the speaker. Include bracketed BACKGROUND cues suggesting what should appear behind the speaker at key moments.',
+  'Skit Roleplay': 'Write as a short scripted skit with at least two roles or a clear character switch. Label who is speaking at each line.',
+  'POV': 'Write in second-person POV style ("you walk in and...") as if the viewer is living the scenario. Include bracketed SHOT cues for what the camera sees.',
+  'Day in the Life Vlog': 'Write as a loose vlog voice-over that follows a real-time sequence of moments. Include bracketed TIMESTAMP/SCENE cues (e.g., Morning, Midday, Evening).',
+  'Case Study Teardown': 'Write as a breakdown/analysis of a real or example result. Include bracketed cues for when to show screen recordings, screenshots, or data overlays.',
+  'Watch Me Work ASMR': 'Write minimal spoken lines meant to sit over quiet ambient/ASMR-style work footage. Include bracketed cues for on-screen text carrying the main educational points since dialogue should be sparse.',
+  'Interview QA': 'Write in a question-and-answer format with a clear interviewer question followed by the client/creator answer for each beat.'
+};
 
-<!-- PASSWORD SCREEN -->
-<div class="password-screen" id="passwordScreen">
-  <div class="password-card">
-    <div class="lock-icon">🔐</div>
-    <h2>Team Access Only</h2>
-    <p>Enter your access password to continue.</p>
-    <input type="password" id="pwInput" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlock()">
-    <button class="btn-unlock" id="unlockBtn" onclick="unlock()">Unlock</button>
-    <div class="pw-error" id="pwError"></div>
-  </div>
-</div>
+function buildVaultInstructions(hookCategory, template, videoFormat) {
+  const hookLine = hookCategory && hookCategory !== 'Any AI chooses best'
+    ? `Hook Category: ${hookCategory}. The HOOK must be written strictly in this style. Do not default to a generic hook style.`
+    : 'Hook Category: Any AI chooses best. Select the hook style most likely to stop the scroll for this topic and audience.';
 
-<!-- MAIN APP -->
-<div class="app-screen" id="appScreen">
-  <div class="main">
-    <div class="card">
-      <div class="card-title">Client info</div>
-      <div class="field">
-        <label>Client name <span class="req">*</span></label>
-        <input type="text" id="clientName" placeholder="e.g. John Smith">
-      </div>
-      <div class="row">
-        <div class="field">
-          <label>Niche <span class="req">*</span></label>
-          <input type="text" id="niche" placeholder="e.g. Fitness coaching">
-        </div>
-        <div class="field">
-          <label>Package tier</label>
-          <select id="packageTier">
-            <option value="12 scripts/month">12 per month</option>
-            <option value="20 scripts/month">20 per month</option>
-            <option value="30 scripts/month">30 per month</option>
-          </select>
-        </div>
-      </div>
-      <div class="field">
-        <label>Their offer <span class="req">*</span></label>
-        <input type="text" id="offer" placeholder="e.g. Online running coaching, $500/month">
-      </div>
-      <div class="field">
-        <label>Target audience <span class="req">*</span></label>
-        <input type="text" id="audience" placeholder="e.g. Beginners who want to run their first 5K">
-      </div>
-      <div class="field">
-        <label>Tone of voice</label>
-        <input type="text" id="tone" placeholder="e.g. Energetic, direct, no fluff">
-      </div>
-      <hr class="divider">
-      <div class="card-title">Script settings</div>
-      <div class="row">
-        <div class="field">
-          <label>Video type</label>
-          <select id="videoType">
-            <option>Talking Head</option>
-            <option>Voiceover Broll</option>
-            <option>Sales Talking Head</option>
-            <option>Reaction</option>
-            <option>Split Screen</option>
-            <option>Exercise Demo</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Length</label>
-          <select id="videoLength">
-            <option value="30 seconds (65-75 words)">30 seconds</option>
-            <option value="60 seconds (130-150 words)" selected>60 seconds</option>
-            <option value="80 seconds (175-195 words)">80 seconds</option>
-          </select>
-        </div>
-      </div>
-      <div class="field">
-        <label>Script topic / angle <span class="req">*</span></label>
-        <input type="text" id="topic" placeholder="e.g. 3 mistakes beginner runners make">
-      </div>
-      <div class="field">
-        <label>Call to action</label>
-        <select id="cta">
-          <option value="Comment COACH below and I will send you my free training plan">Comment COACH</option>
-          <option value="Comment GUIDE below for a free resource">Comment GUIDE</option>
-          <option value="Follow for more tips like this">Follow for more</option>
-          <option value="Save this video to come back to it">Save this video</option>
-          <option value="DM me and lets talk about working together">DM to work together</option>
-          <option value="Link in bio to get started today">Link in bio</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Additional notes (optional)</label>
-        <textarea id="notes" placeholder="e.g. Avoid injury talk. Client ran Boston Marathon. Keep it punchy."></textarea>
-      </div>
-      <div class="error-msg" id="errMsg"></div>
-      <button class="btn-generate" id="genBtn" onclick="generate()">Generate script</button>
-    </div>
+  const templateLine = template && template !== 'Any AI chooses best'
+    ? `Script Template: ${template}. The overall structure of the BODY must follow this template's narrative/structural pattern exactly, not a generic structure.`
+    : 'Script Template: Any AI chooses best. Select the structural template best suited to this topic and audience.';
 
-    <div class="output-card" id="outputCard">
-      <div class="empty-state" id="emptyState">
-        <div class="icon">✦</div>
-        <p>Fill in the client info and script settings,<br>then hit Generate script.</p>
-      </div>
-      <div id="outputContent" style="display:none;">
-        <div class="output-header">
-          <div>
-            <div class="output-title" id="outputTitle"></div>
-            <div class="output-meta" id="outputMeta"></div>
-          </div>
-          <button class="btn-copy" onclick="copyScript()">Copy script</button>
-        </div>
-        <div class="script-output" id="scriptOutput"></div>
-        <button class="new-script-btn" onclick="resetForm()">Generate another script</button>
-      </div>
-      <div id="loadingState" style="display:none;" class="loading-state">
-        <div class="dots"><span></span><span></span><span></span></div>
-        <div style="font-size:13px;">Writing your script...</div>
-      </div>
-    </div>
-  </div>
-</div>
+  const formatNote = FORMAT_EDITOR_NOTES[videoFormat] || 'Write generally, but include any bracketed production cues that would help an editor understand pacing.';
+  const formatLine = `Video Format: ${videoFormat}. ${formatNote}`;
 
-<script>
-  let lastScript = '';
-  let sessionPassword = '';
+  return `VAULT INSTRUCTIONS (HARD REQUIREMENTS — do not deviate from these):
+- ${hookLine}
+- ${templateLine}
+- ${formatLine}
+These three selections are non-negotiable creative constraints. Every part of the script (hook, body, and CTA delivery) must reflect them.`;
+}
 
-  async function unlock() {
-    const pw = document.getElementById('pwInput').value.trim();
-    if (!pw) { document.getElementById('pwError').textContent = 'Please enter a password.'; return; }
-    const btn = document.getElementById('unlockBtn');
-    btn.disabled = true;
-    btn.textContent = 'Checking...';
-    try {
-      const res = await fetch('/verify-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pw })
-      });
-      const data = await res.json();
-      if (data.success) {
-        sessionPassword = pw;
-        document.getElementById('passwordScreen').style.display = 'none';
-        document.getElementById('appScreen').style.display = 'block';
-      } else {
-        document.getElementById('pwError').textContent = 'Incorrect password. Try again.';
-        document.getElementById('pwInput').value = '';
-        btn.disabled = false;
-        btn.textContent = 'Unlock';
-      }
-    } catch (err) {
-      document.getElementById('pwError').textContent = 'Something went wrong. Try again.';
-      btn.disabled = false;
-      btn.textContent = 'Unlock';
+function buildPrompt(fields) {
+  const {
+    clientName, niche, packageTier, offer, targetAudience,
+    toneOfVoice, scriptTopic, videoLength, callToAction,
+    hookCategory, template, videoFormat, additionalNotes
+  } = fields;
+
+  const vaultInstructions = buildVaultInstructions(hookCategory, template, videoFormat);
+
+  return `You are an expert short-form content scriptwriter working for First Class Creators, an agency that writes Instagram Reel scripts for coaches, course creators, and digital service providers.
+
+Write one complete short-form video script based on the details below. Return the script formatted with clearly bolded HOOK, BODY, and CTA sections, in that order. No emojis, no dashes.
+
+CLIENT DETAILS
+Client Name: ${clientName}
+Niche: ${niche}
+Package Tier: ${packageTier} scripts/month
+Their Offer: ${offer}
+Target Audience: ${targetAudience}
+Tone of Voice: ${toneOfVoice}
+Video Length: ${videoLength} seconds
+Script Topic: ${scriptTopic}
+Call to Action: ${callToAction}
+Additional Notes: ${additionalNotes || 'None'}
+
+${vaultInstructions}
+
+Write the full script now, formatted as:
+
+HOOK:
+[hook lines]
+
+BODY:
+[body lines]
+
+CTA:
+[cta lines]`;
+}
+
+app.post('/api/generate-script', async (req, res) => {
+  try {
+    const {
+      clientName, niche, packageTier, offer, targetAudience,
+      toneOfVoice, scriptTopic, videoLength, callToAction,
+      hookCategory, template, videoFormat, additionalNotes
+    } = req.body || {};
+
+    if (!clientName || !niche || !offer || !targetAudience || !toneOfVoice || !scriptTopic || !callToAction) {
+      return res.status(400).json({ error: 'Missing required fields.' });
     }
-  }
 
-  function validate() {
-    const fields = [
-      { id: 'clientName', label: 'Client name' },
-      { id: 'niche', label: 'Niche' },
-      { id: 'offer', label: 'Their offer' },
-      { id: 'audience', label: 'Target audience' },
-      { id: 'topic', label: 'Script topic' },
-    ];
-    for (const f of fields) {
-      if (!document.getElementById(f.id).value.trim()) {
-        document.getElementById('errMsg').textContent = f.label + ' is required.';
-        document.getElementById(f.id).focus();
-        return false;
-      }
+    if (!ANTHROPIC_API_KEY) {
+      return res.status(500).json({ error: 'Server is missing ANTHROPIC_API_KEY.' });
     }
-    document.getElementById('errMsg').textContent = '';
-    return true;
-  }
 
-  async function generate() {
-    if (!validate()) return;
-    const btn = document.getElementById('genBtn');
-    btn.disabled = true;
-    btn.textContent = 'Generating...';
-    document.getElementById('emptyState').style.display = 'none';
-    document.getElementById('outputContent').style.display = 'none';
-    document.getElementById('loadingState').style.display = 'flex';
+    const resolvedHookCategory = hookCategory || 'Any AI chooses best';
+    const resolvedTemplate = template || 'Any AI chooses best';
+    const resolvedVideoFormat = videoFormat || 'Talking Head';
 
-    const formData = {
-      password: sessionPassword,
-      clientName: document.getElementById('clientName').value.trim(),
-      niche: document.getElementById('niche').value.trim(),
-      offer: document.getElementById('offer').value.trim(),
-      audience: document.getElementById('audience').value.trim(),
-      tone: document.getElementById('tone').value.trim(),
-      packageTier: document.getElementById('packageTier').value,
-      videoType: document.getElementById('videoType').value,
-      videoLength: document.getElementById('videoLength').value,
-      topic: document.getElementById('topic').value.trim(),
-      cta: document.getElementById('cta').value,
-      notes: document.getElementById('notes').value.trim(),
-    };
-
-    try {
-      const res = await fetch('/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      const data = await res.json();
-      if (data.error) throw new Error(data.error);
-      lastScript = data.script;
-      document.getElementById('outputTitle').textContent = formData.clientName + ' — ' + formData.videoType;
-      document.getElementById('outputMeta').innerHTML = '<span>' + formData.videoLength.split(' (')[0] + '</span> &nbsp;·&nbsp; ' + formData.packageTier + ' &nbsp;·&nbsp; ' + formData.topic;
-      const formatted = data.script
-        .replace(/\[EDITOR NOTE: (.*?)\]/g, '<span class="editor-note">[EDITOR NOTE: $1]</span>')
-        .replace(/^(HOOK:|BODY:|CTA:)/gm, '<span class="section-label">$1</span>');
-      document.getElementById('scriptOutput').innerHTML = formatted;
-      document.getElementById('loadingState').style.display = 'none';
-      document.getElementById('outputContent').style.display = 'block';
-    } catch (err) {
-      document.getElementById('loadingState').style.display = 'none';
-      document.getElementById('emptyState').style.display = 'flex';
-      document.getElementById('errMsg').textContent = 'Error: ' + err.message;
-    }
-    btn.disabled = false;
-    btn.textContent = 'Generate script';
-  }
-
-  function copyScript() {
-    if (!lastScript) return;
-    navigator.clipboard.writeText(lastScript).then(() => {
-      const btn = document.querySelector('.btn-copy');
-      btn.textContent = 'Copied!';
-      setTimeout(() => { btn.textContent = 'Copy script'; }, 2000);
+    const prompt = buildPrompt({
+      clientName, niche, packageTier, offer, targetAudience,
+      toneOfVoice, scriptTopic, videoLength, callToAction,
+      hookCategory: resolvedHookCategory,
+      template: resolvedTemplate,
+      videoFormat: resolvedVideoFormat,
+      additionalNotes
     });
-  }
 
-  function resetForm() {
-    document.getElementById('topic').value = '';
-    document.getElementById('notes').value = '';
-    document.getElementById('outputContent').style.display = 'none';
-    document.getElementById('emptyState').style.display = 'flex';
-    document.getElementById('topic').focus();
+    const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: CLAUDE_MODEL,
+        max_tokens: 1500,
+        messages: [
+          { role: 'user', content: prompt }
+        ]
+      })
+    });
+
+    if (!anthropicRes.ok) {
+      const errText = await anthropicRes.text();
+      console.error('Anthropic API error:', errText);
+      return res.status(502).json({ error: 'Script generation failed. Please try again.' });
+    }
+
+    const anthropicData = await anthropicRes.json();
+    const scriptText = (anthropicData.content || [])
+      .map((block) => (block.type === 'text' ? block.text : ''))
+      .filter(Boolean)
+      .join('\n')
+      .trim();
+
+    return res.json({
+      script: scriptText,
+      hookCategory: resolvedHookCategory,
+      template: resolvedTemplate,
+      videoFormat: resolvedVideoFormat
+    });
+  } catch (err) {
+    console.error('Error generating script:', err);
+    return res.status(500).json({ error: 'Unexpected server error.' });
   }
-</script>
-</body>
-</html>
+});
+
+app.listen(PORT, () => {
+  console.log(`FCC Script Generator running on port ${PORT}`);
+});
